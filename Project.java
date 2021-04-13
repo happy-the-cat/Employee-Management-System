@@ -143,18 +143,18 @@ enum PaymentStatus {
 class Wages {
     private String employeeIDNumber;
     private final int[] hoursWorkedEachDay = new int[14];
-    private int rateOfPay;
-    private int grossAmountEarned;
-    private int totalDeductions;
-    private int netWagesPaidForWeek;
+    private float rateOfPay;
+    private float grossAmountEarned;
+    private float totalDeductions;
+    private float netWagesPaidForWeek;
     private PaymentMethod paymentMethod;
     private PaymentStatus paymentStatus;
 
     public Wages(String employeeIDNumber,
-                 int rateOfPay,
-                 int grossAmountEarned,
-                 int totalDeductions,
-                 int netWagesPaidForWeek,
+                 float rateOfPay,
+                 float grossAmountEarned,
+                 float totalDeductions,
+                 float netWagesPaidForWeek,
                  PaymentMethod paymentMethod,
                  PaymentStatus paymentStatus) {
         this.employeeIDNumber = employeeIDNumber;
@@ -178,35 +178,35 @@ class Wages {
         return hoursWorkedEachDay;
     }
 
-    public int getRateOfPay() {
+    public float getRateOfPay() {
         return rateOfPay;
     }
 
-    public void setRateOfPay(int rateOfPay) {
+    public void setRateOfPay(float rateOfPay) {
         this.rateOfPay = rateOfPay;
     }
 
-    public int getGrossAmountEarned() {
+    public float getGrossAmountEarned() {
         return grossAmountEarned;
     }
 
-    public void setGrossAmountEarned(int grossAmountEarned) {
+    public void setGrossAmountEarned(float grossAmountEarned) {
         this.grossAmountEarned = grossAmountEarned;
     }
 
-    public int getTotalDeductions() {
+    public float getTotalDeductions() {
         return totalDeductions;
     }
 
-    public void setTotalDeductions(int totalDeductions) {
+    public void setTotalDeductions(float totalDeductions) {
         this.totalDeductions = totalDeductions;
     }
 
-    public int getNetWagesPaidForWeek() {
+    public float getNetWagesPaidForWeek() {
         return netWagesPaidForWeek;
     }
 
-    public void setNetWagesPaidForWeek(int netWagesPaidForWeek) {
+    public void setNetWagesPaidForWeek(float netWagesPaidForWeek) {
         this.netWagesPaidForWeek = netWagesPaidForWeek;
     }
 
