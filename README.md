@@ -16,7 +16,8 @@ Yee is an employee management system that will be useful to the people who have 
 ## Environment Set-up
 
 ## Revision logs
-
+April 8 2021:
+Completion of initial UI/UX design.
 ## Contributors
   John Erwin Bisa \
   Joyce Yuenlam Cai \
