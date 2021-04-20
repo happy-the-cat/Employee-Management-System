@@ -19,6 +19,6 @@ Yee is an employee management system that will be useful to the people who have 
 April 8 2021:
 Completion of initial UI/UX design.
 ## Contributors
-  John Erwin Bisa \
-  Joyce Yuenlam Cai \
-  Patrick Joel Gomez
+  John Erwin Bisa \ - email: john_erwin_bisa@dlsu.edu.ph
+  Joyce Yuenlam Cai \ - email: 
+  Patrick Joel Gomez - email: pjgomez.16@gmail.com
