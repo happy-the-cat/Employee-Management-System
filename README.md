@@ -20,4 +20,4 @@ Employee Management System (EMS) is a set of employee management tools for the h
 ## Contributors
   John Erwin Bisa \
   Joyce Yuenlam Cai \
-  Patrick Gomez
+  Patrick Joel Gomez
