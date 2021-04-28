@@ -6,7 +6,7 @@ Yee is an employee management device that will be useful to the people who have 
 1. Node.js
 2. Java SDK
 3. React v.17.0.1
-4. React Native v.0.64.0
+4. React Native cli
 5. Yarn
 6. react-native-picker/picker 1.15.0
 7. React Navigation
@@ -20,10 +20,11 @@ Yee is an employee management device that will be useful to the people who have 
 Video Guide: https://www.youtube.com/watch?v=F7xdbsjFGtU
 Textual Guide: https://reactnative.dev/docs/environment-setup
 
-**The IDE & Emulators**
+**Installing and Setting-up the IDE & Emulators**
 1. Download Webstorm from https://www.jetbrains.com/webstorm/download/  \
    Alternatively, download Visual Studio Code from https://code.visualstudio.com/Download
 2. Download Android Studio from https://developer.android.com/studio for the Android Emulator
+3. Configure Android Studio Emulator
    1. Upon completion of download, launch Android Studio.
    2. Click on Configure (bottom right) and select SDK Manager from the drop-down list.
    3. Check the box beside `Show Package Details` (bottom right), then click on the arrow beside `Android 10.0 (Q)` to unfold it. Make sure the following are ticked on:
@@ -32,14 +33,21 @@ Textual Guide: https://reactnative.dev/docs/environment-setup
       Click `OK` to install if they were not checked before. 
    4. Click on Configure again, this time select the AVD Manager.
    5. Click on `Create Virutal Device` then choose any phone moodel. Click on `Next` then choose the Q API Level 29 image. Click `Next` then `Finish` to accomplish configuring your Android virtual device.
- 
+
 4. If you are using MacBook, download XCode from the AppStore.
    
-**React Native Cli**
+**Downloading the Dependencies**
 1. Look up Command Prompt, right click it, then select 'Run as Administrative'
 2. Download Node.js and Java SDK by typing in the following line to cmd: \
    `choco install -y nodejs.install openjdk8`
-3. Webstorm automatically downloads React Native upon creation of a new React Native Project.
+3. For React Native cli and related dependencies, Webstorm automatically downloads what are needed, so just follow the prompts in Webstorm later on when we clone the project.
+
+**Installing the Project**
+1. Open up Webstorm. At the Menu bar, select `Git` > `Clone`. 
+2. In the pop-up window `Get from Version Control`, copy paste this Git Reporsitory's link in the `URL` input field. In the `Directory` field, input the path where you want the project/local Git repository to be cloned at.
+3. Click the `Clone` button to create our project.
+4. Open the newly created project.
+5. Under the Project files, expand the project file and `Trial_EMS` folder. Scroll down to `package.json` file and click on it to open. In the editor area, click the green play button at the start of the line: `"android": "react-native run-android",` to run the application on Android Emulator.
 
 ## Revision logs
 April 8 2021:
