@@ -17,7 +17,7 @@ Yee is an employee management device that will be useful to the people who have 
 3. Xcode
 
 ## Environment Set-up
-Video Guide: https://www.youtube.com/watch?v=F7xdbsjFGtU
+Video Guide: https://www.youtube.com/watch?v=F7xdbsjFGtU \
 Textual Guide: https://reactnative.dev/docs/environment-setup
 
 **Installing and Setting-up the IDE & Emulators**
@@ -40,14 +40,19 @@ Textual Guide: https://reactnative.dev/docs/environment-setup
 1. Look up Command Prompt, right click it, then select 'Run as Administrative'
 2. Download Node.js and Java SDK by typing in the following line to cmd: \
    `choco install -y nodejs.install openjdk8`
-3. For React Native cli and related dependencies, Webstorm automatically downloads what are needed, so just follow the prompts in Webstorm later on when we clone the project.
+3. Download Yarn package manager (will be used later to download and manage our project dependencies easier) by typing the following line in cmd: \
+   `npm install --global yarn`
+4. For React Native cli and related dependencies, Webstorm automatically downloads what are needed, so just follow the prompts in Webstorm later on when we clone the project.
 
 **Installing the Project**
 1. Open up Webstorm. At the Menu bar, select `Git` > `Clone`. 
 2. In the pop-up window `Get from Version Control`, copy paste this Git Reporsitory's link in the `URL` input field. In the `Directory` field, input the path where you want the project/local Git repository to be cloned at.
 3. Click the `Clone` button to create our project.
 4. Open the newly created project.
-5. Under the Project files, expand the project file and `Trial_EMS` folder. Scroll down to `package.json` file and click on it to open. In the editor area, click the green play button at the start of the line: `"android": "react-native run-android",` to run the application on Android Emulator.
+5. Navigate to the `Terminal` tab at bottom, right above the status bar.
+6. Run the following command install all the project dependencies: \
+   `yarn install` 
+8. Under the Project files, expand the project file and `Trial_EMS` folder. Scroll down to `package.json` file and click on it to open. In the editor area, click the green play button at the start of the line: `"android": "react-native run-android",` to run the application on Android Emulator.
 
 ## Revision logs
 April 8 2021:
