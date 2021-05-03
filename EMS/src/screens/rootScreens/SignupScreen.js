@@ -1,19 +1,21 @@
-import * as React from 'react';
-import {Image, StatusBar, StyleSheet, Text, View} from 'react-native';
-import * as Styles from '../../styles';
-import {ButtonPrimary, TextOnlyButton} from '../../component/buttons';
+import React, {useState} from 'react';
+import {StatusBar, StyleSheet, Text, View} from 'react-native';
 import {Button, Input} from 'react-native-elements';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {Picker} from '@react-native-picker/picker';
-import {useState} from 'react';
 
-const WelcomeScreen = ({navigation}) => {
-  const [data, setData] = React.useState({
+import {ButtonPrimary, LabelNButton} from '../../component/buttons';
+import * as Styles from '../../styles';
+
+const SignupScreen = ({navigation}) => {
+  const [data, setData] = useState({
     username: '',
     password: '',
+    confirmPassword: '',
     firstName: '',
     lastName: '',
     emailAddress: '',
+    isChangeTextEmpty: true,
     isValidUsername: true,
     isValidPassword: true,
     isPasswordMatch: true,
@@ -24,6 +26,20 @@ const WelcomeScreen = ({navigation}) => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [gender, setGender] = useState('M');
   const [pronoun, setPronoun] = useState('they');
+
+  const handleChangeText = value => {
+    if (value.trim().length !== 0) {
+      setData({
+        ...data,
+        isChangeText: false,
+      });
+    } else {
+      setData({
+        ...data,
+        isChangeText: true,
+      });
+    }
+  };
 
   const handleEmailChange = value => {
     /*TODO*/
@@ -71,49 +87,54 @@ const WelcomeScreen = ({navigation}) => {
         barStyle="dark-content"
       />
       <Text style={Styles.texts.title}> Sign Up </Text>
-      <View style={localStyles.viewHorizontal}>
+      <View style={Styles.containers.horizontal}>
         <Input
           placeholder="First Name"
-          placeholderTextColor={Styles.colors.gray}
-          style={localStyles.textInput}
           onChangeText={value => setData({firstName: value})}
+          inputStyle={localStyles.inputText}
+          inputContainerStyle={localStyles.inputContainer}
+          errorMessage={!data.isChangeTextEmpty ? 'Invalid Input' : ''}
+          renderErrorMessage={false}
         />
         <Input
           placeholder="Last Name"
-          placeholderTextColor={Styles.colors.gray}
-          style={localStyles.textInput}
           onChangeText={value => setData({lastName: value})}
+          style={localStyles.inputText}
+          errorMessage={!data.isChangeTextEmpty ? 'Invalid Input' : ''}
+          renderErrorMessage={false}
         />
       </View>
       <Input
         placeholder="E-mail Address"
-        placeholderTextColor={Styles.colors.gray}
-        style={localStyles.textInput}
-        autoCapitalize="none"
         onChangeText={value => handleEmailChange(value)}
+        style={localStyles.inputText}
+        autoCapitalize="none"
       />
       <Input
         placeholder="Username"
-        placeholderTextColor={Styles.colors.gray}
-        style={localStyles.textInput}
-        autoCapitalize="none"
         onChangeText={value => handleUsernameChange(value)}
+        style={localStyles.inputText}
+        autoCapitalize="none"
+        errorMessage={!data.isValidUsername ? 'Invalid Username' : ''}
+        renderErrorMessage={false}
       />
       <Input
         placeholder="Password"
-        placeholderTextColor={Styles.colors.gray}
-        secureTextEntry={true}
-        style={localStyles.textInput}
-        autoCapitalize="none"
         onChangeText={value => handlePasswordChange(value)}
+        secureTextEntry={true}
+        style={localStyles.inputText}
+        autoCapitalize="none"
+        errorMessage={!data.isValidPassword ? 'Invalid Password' : ''}
+        renderErrorMessage={false}
       />
       <Input
         placeholder="Confirm Password"
-        placeholderTextColor={Styles.colors.gray}
-        secureTextEntry={true}
-        style={localStyles.textInput}
-        autoCapitalize="none"
         onChangeText={value => handleMatchPassword(value)}
+        secureTextEntry={true}
+        style={localStyles.inputText}
+        autoCapitalize="none"
+        errorMessage={!data.isPasswordMatch ? 'Password does not match' : ''}
+        renderErrorMessage={false}
       />
       <View>
         <View>
@@ -133,7 +154,7 @@ const WelcomeScreen = ({navigation}) => {
           />
         )}
       </View>
-      <View style={localStyles.viewHorizontal}>
+      <View style={Styles.containers.horizontal}>
         <Picker
           style={Styles.texts.default}
           selectedValue={gender}
@@ -156,21 +177,10 @@ const WelcomeScreen = ({navigation}) => {
         title={'Sign Up'}
         onPress={() => navigation.navigate('LoginScreen')}
       />
-      <Button
-        titleStyle={[
-          Styles.texts.secondary,
-          {color: Styles.colors.onBackground},
-        ]}
-        type="clear"
-        title="Incorrect user type? Return!"
-      />
-      <Button
-        titleStyle={[
-          Styles.texts.secondary,
-          {color: Styles.colors.onBackground},
-        ]}
-        type="clear"
-        title="Already have an account? Log In!"
+      <LabelNButton
+        label={'Incorrect user type? Already have an account?'}
+        title={'Return!'}
+        onPress={() => navigation.goBack()}
       />
     </View>
   );
@@ -182,16 +192,13 @@ const localStyles = StyleSheet.create({
     ...Styles.containers.pad,
     backgroundColor: '#fff',
   },
-  viewHorizontal: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignSelf: 'center',
-  },
-  textInput: {
+  inputText: {
     ...Styles.texts.default,
     width: Styles.maxWidth,
-    topMargin: 28,
+  },
+  inputContainer: {
+    marginTop: Styles.whitespaces.inner,
   },
 });
 
-export default WelcomeScreen;
+export default SignupScreen;

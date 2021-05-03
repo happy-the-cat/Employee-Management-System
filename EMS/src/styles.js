@@ -2,20 +2,26 @@ import {StyleSheet, Dimensions} from 'react-native';
 
 const maxWidth = Dimensions.get('window').width - 30 * 2;
 
+const whitespaces = {
+  margin: 30,
+  outer: 28,
+  inner: 14,
+};
+
 const colors = {
   light: '#fff',
   onBackground: '#000',
   primary: '#2962FF',
-  primaryLight: '529CFF',
-  primaryDark: '0039CB',
+  primaryLight: '#529CFF',
+  primaryDark: '#0039CB',
   onPrimary: '#fff',
   secondary: '#E7EDF7',
   onSecondary: '#000',
-  gray: '8F8F8F',
-  darkGray: '333333',
-  lightGray: 'E0E0E0',
-  highlight: '80D8FF',
-  error: 'D50000',
+  gray: '#8F8F8F',
+  darkGray: '#333333',
+  lightGray: '#E0E0E0',
+  highlight: '#80D8FF',
+  error: '#D50000',
 };
 
 const texts = StyleSheet.create({
@@ -57,8 +63,12 @@ const containers = StyleSheet.create({
     flex: 1,
   },
   pad: {
-    padding: 30,
+    padding: whitespaces.margin,
+  },
+  horizontal: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 });
 
-export {colors, texts, containers, maxWidth};
+export {colors, texts, containers, maxWidth, whitespaces};

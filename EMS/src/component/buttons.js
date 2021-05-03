@@ -1,44 +1,49 @@
 import React from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Text,
-  StyleSheet,
-  Dimensions,
-} from 'react-native';
+import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
 import * as Styles from '../styles';
+import {Button} from 'react-native-elements';
 
-const ButtonPrimary = ({onPress, title}) => (
+const ButtonPrimary = ({onPress, title, containerStyle, textStyle}) => (
   <View style={baseButtonStyles.buttonContainer}>
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={onPress}
-      style={primaryStyles.button}>
-      <Text style={[primaryStyles.text]}>{title}</Text>
+      style={[containerStyle, primaryStyles.button]}>
+      <Text style={[textStyle, primaryStyles.text]}>{title}</Text>
     </TouchableOpacity>
   </View>
 );
 
-const ButtonSecondary = ({onPress, title}) => (
+const ButtonSecondary = ({onPress, title, containerStyle, textStyle}) => (
   <View style={baseButtonStyles.buttonContainer}>
     <TouchableOpacity
       activeOpacity={0.8}
       onPress={onPress}
-      style={secondaryStyles.button}>
-      <Text style={[secondaryStyles.text]}>{title}</Text>
+      style={[containerStyle, secondaryStyles.button]}>
+      <Text style={[textStyle, secondaryStyles.text]}>{title}</Text>
     </TouchableOpacity>
   </View>
 );
 
-const TextOnlyButton = ({onPress, title}) => {
-  <View style={baseButtonStyles.buttonContainer}>
-    <TouchableOpacity
-      activeOpacity={0.8}
-      onPress={onPress}
-      style={textButtonStyles.button}>
-      <Text style={[textButtonStyles.text]}>{title}</Text>
-    </TouchableOpacity>
-  </View>;
+const LabelNButton = ({label, title, onPress, containerStyle, textStyle}) => {
+  return (
+    <View style={[containerStyle, Styles.containers.horizontal]}>
+      <Text style={[textStyle, Styles.texts.secondary]}>{label}</Text>
+      <Button
+        titleStyle={[
+          textStyle,
+          Styles.texts.secondaryEmphasis,
+          {color: Styles.colors.onBackground},
+        ]}
+        containerStyle={{
+          marginVertical: -10,
+        }}
+        onPress={onPress}
+        type="clear"
+        title={title}
+      />
+    </View>
+  );
 };
 
 const baseButtonStyles = StyleSheet.create({
@@ -47,7 +52,7 @@ const baseButtonStyles = StyleSheet.create({
     alignSelf: 'center',
   },
   baseButton: {
-    elevation: 4,
+    elevation: 5,
     borderRadius: 30,
     paddingVertical: 11,
   },
@@ -75,14 +80,4 @@ const secondaryStyles = StyleSheet.create({
   },
 });
 
-const textButtonStyles = StyleSheet.create({
-  button: {
-    backgroundColor: 'transparent',
-  },
-  text: {
-    ...Styles.texts.secondaryEmphasis,
-    color: Styles.colors.onBackground,
-  },
-});
-
-export {ButtonPrimary, ButtonSecondary, TextOnlyButton};
+export {ButtonPrimary, ButtonSecondary, LabelNButton};

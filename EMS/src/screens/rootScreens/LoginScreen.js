@@ -1,20 +1,22 @@
-import * as React from 'react';
+import React, {useState} from 'react';
 import {View, Image, StyleSheet, Text, StatusBar} from 'react-native';
 import {Input, Button} from 'react-native-elements';
 
+import {ButtonPrimary} from '../../component/buttons';
 import * as Styles from '../../styles';
-import {ButtonPrimary, TextOnlyButton} from '../../component/buttons';
+import LoginImg from '../../../assets/images/login.svg';
 
 const LoginScreen = ({navigation}) => {
-  const [data, setData] = React.useState({
+  const [data, setData] = useState({
     username: '',
     password: '',
     isValidUsername: true,
     isValidPassword: true,
+    secureTextEntry: true,
   });
 
   const handleUsernameChange = value => {
-    if (value.trim().length >= 9) {
+    if (value.trim().length >= 6) {
       setData({
         ...data,
         username: value,
@@ -50,55 +52,62 @@ const LoginScreen = ({navigation}) => {
         backgroundColor={Styles.colors.light}
         barStyle="dark-content"
       />
-      <View style={{flex: 1}}>
-        <Image
-          style={localStyles.image}
-          source={require('../../../assets/images/login.png')}
+      <LoginImg height={'40%'} width={Styles.maxWidth} />
+      <Text style={localStyles.header}> Log In </Text>
+      <Input
+        placeholder="Enter Username"
+        onChangeText={value => handleUsernameChange(value)}
+        inputStyle={localStyles.inputText}
+        inputContainerStyle={localStyles.inputContainer}
+        autoCapitalize="none"
+        errorMessage={!data.isValidUsername ? 'Invalid Username' : ''}
+        renderErrorMessage={false}
+      />
+      <Input
+        placeholder="Enter Password"
+        onChangeText={value => handlePasswordChange(value)}
+        secureTextEntry={true}
+        inputStyle={localStyles.inputText}
+        inputContainerStyle={localStyles.inputContainer}
+        autoCapitalize="none"
+        errorMessage={!data.isValidPassword ? 'Invalid Password' : ''}
+        renderErrorMessage={false}
+      />
+      <View style={{alignItems: 'flex-end'}}>
+        <Button
+          titleStyle={[
+            Styles.texts.secondary,
+            {color: Styles.colors.onBackground},
+          ]}
+          type="clear"
+          title={'Forgot Password?'}
+          /*TODO: add handler for Forgot Password onPress prop*/
         />
       </View>
-      <View style={{flex: 1}}>
-        <Text style={Styles.texts.title}> Log In </Text>
-        <Input
-          placeholder="Enter Username"
-          placeholderTextColor={Styles.colors.gray}
-          style={localStyles.textInput}
-          autoCapitalize="none"
-          onChangeText={value => handleUsernameChange(value)}
+      <View style={{padding: 28, alignItems: 'center'}}>
+        <ButtonPrimary
+          title={'Log In'}
+          /*TODO: add handler function for pressing login button to onPress prop*/
         />
-        <Input
-          placeholder="Enter Password"
-          placeholderTextColor={Styles.colors.gray}
-          secureTextEntry={true}
-          style={localStyles.textInput}
-          autoCapitalize="none"
-          onChangeText={value => handlePasswordChange(value)}
-        />
-        <Text style={[Styles.texts.secondary, {textAlign: 'right'}]}>
-          {' '}
-          Forgot Password?{' '}
+        <Text
+          style={[
+            Styles.texts.secondary,
+            {marginTop: Styles.whitespaces.outer},
+          ]}>
+          {'Incorrect user type? Don’t have an account?'}
         </Text>
-        <View style={{padding: 28, alignItems: 'center'}}>
-          <ButtonPrimary
-            title={'Log In'}
-            onPress={() => navigation.navigate('LoginScreen')}
-          />
-          <Button
-            titleStyle={[
-              Styles.texts.secondary,
-              {color: Styles.colors.onBackground},
-            ]}
-            type="clear"
-            title="Incorrect user type? Return!"
-          />
-          <Button
-            titleStyle={[
-              Styles.texts.secondary,
-              {color: Styles.colors.onBackground},
-            ]}
-            type="clear"
-            title="Don’t have an account? Sign Up!"
-          />
-        </View>
+        <Button
+          titleStyle={[
+            Styles.texts.secondaryEmphasis,
+            {color: Styles.colors.onBackground},
+          ]}
+          containerStyle={{
+            marginVertical: -3,
+          }}
+          type="clear"
+          title={'Return!'}
+          onPress={() => navigation.goBack()}
+        />
       </View>
     </View>
   );
@@ -110,19 +119,16 @@ const localStyles = StyleSheet.create({
     ...Styles.containers.pad,
     backgroundColor: '#fff',
   },
-  image: {
-    ...Styles.containers.fill,
-    aspectRatio: 1,
-    alignSelf: 'center',
-    resizeMode: 'contain',
+  header: {
+    ...Styles.texts.title,
+    marginTop: Styles.whitespaces.outer,
   },
-  textInput: {
+  inputText: {
     ...Styles.texts.default,
     width: Styles.maxWidth,
-    topMargin: 28,
   },
-  button: {
-    ...Styles.texts.secondary,
+  inputContainer: {
+    marginTop: Styles.whitespaces.inner,
   },
 });
 
