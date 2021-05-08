@@ -67,7 +67,8 @@ const containers = StyleSheet.create({
   },
   horizontal: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignSelf: 'center',
+    justifyContent: 'flex-start',
   },
 });
 

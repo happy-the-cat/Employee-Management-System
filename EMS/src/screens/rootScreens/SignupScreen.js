@@ -1,11 +1,12 @@
 import React, {useState} from 'react';
 import {StatusBar, StyleSheet, Text, View} from 'react-native';
-import {Button, Input} from 'react-native-elements';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import {Picker} from '@react-native-picker/picker';
 
-import {ButtonPrimary, LabelNButton} from '../../component/buttons';
-import * as Styles from '../../styles';
+import {ButtonPrimary, ButtonTextOnly} from '../../component/Button';
+import {TextInput} from '../../component/TextInput';
+import {DropdownPicker} from '../../component/DropdownPicker';
+import {OverlayDatePicker} from '../../component/OverlayDatePicker';
+
+import * as Styles from '../../Styles';
 
 const SignupScreen = ({navigation}) => {
   const [data, setData] = useState({
@@ -15,34 +16,71 @@ const SignupScreen = ({navigation}) => {
     firstName: '',
     lastName: '',
     emailAddress: '',
-    isChangeTextEmpty: true,
+    isValidFirstName: true,
+    isValidLastName: true,
     isValidUsername: true,
     isValidPassword: true,
     isPasswordMatch: true,
     isValidEmail: true,
-    isValidBirthday: true,
   });
-  const [birthday, setBirthday] = useState(new Date(1598051730000));
-  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [birthday, setBirthday] = useState(new Date());
   const [gender, setGender] = useState('M');
   const [pronoun, setPronoun] = useState('they');
+  const genderOptions = {
+    M: 'Male',
+    F: 'Female',
+  };
+  const pronounOptions = {
+    he: 'He',
+    she: 'She',
+    they: 'They',
+  };
 
-  const handleChangeText = value => {
-    if (value.trim().length !== 0) {
-      setData({
-        ...data,
-        isChangeText: false,
-      });
+  const handleNameChange = (value, isFirstName) => {
+    if (value.trim().length >= 2) {
+      if (isFirstName) {
+        setData({
+          ...data,
+          firstName: value,
+          isValidFirstName: true,
+        });
+      } else {
+        setData({
+          ...data,
+          lastName: value,
+          isValidLastName: true,
+        });
+      }
     } else {
-      setData({
-        ...data,
-        isChangeText: true,
-      });
+      if (isFirstName) {
+        setData({
+          ...data,
+          isValidFirstName: false,
+        });
+      } else {
+        setData({
+          ...data,
+          isValidLastName: false,
+        });
+      }
     }
   };
 
   const handleEmailChange = value => {
-    /*TODO*/
+    const condition = new RegExp(/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w\w+)+$/);
+    if (condition.test(value)) {
+      setData({
+        ...data,
+        emailAddress: value,
+        isValidEmail: true,
+      });
+    } else {
+      setData({
+        ...data,
+        emailAddress: value,
+        isValidEmail: false,
+      });
+    }
   };
 
   const handleUsernameChange = value => {
@@ -55,6 +93,7 @@ const SignupScreen = ({navigation}) => {
     } else {
       setData({
         ...data,
+        username: value,
         isValidUsername: false,
       });
     }
@@ -77,7 +116,30 @@ const SignupScreen = ({navigation}) => {
   };
 
   const handleMatchPassword = value => {
-    /*TODO*/
+    if (value === data.password) {
+      setData({
+        ...data,
+        isPasswordMatch: true,
+      });
+    } else {
+      setData({
+        ...data,
+        isPasswordMatch: false,
+      });
+    }
+  };
+
+  const handleSignupClick = () => {
+    if (
+      data.isValidUsername === true &&
+      data.isValidFirstName === true &&
+      data.isValidLastName === true &&
+      data.isValidEmail === true &&
+      data.isValidPassword === true &&
+      data.isPasswordMatch === true
+    ) {
+      /*TODO: add handler function for pressing signup button*/
+    }
   };
 
   return (
@@ -87,101 +149,87 @@ const SignupScreen = ({navigation}) => {
         barStyle="dark-content"
       />
       <Text style={Styles.texts.title}> Sign Up </Text>
-      <View style={Styles.containers.horizontal}>
-        <Input
+      <View style={localStyles.horizontalContainer}>
+        <TextInput
           placeholder="First Name"
-          onChangeText={value => setData({firstName: value})}
-          inputStyle={localStyles.inputText}
-          inputContainerStyle={localStyles.inputContainer}
-          errorMessage={!data.isChangeTextEmpty ? 'Invalid Input' : ''}
-          renderErrorMessage={false}
+          onChangeText={value => handleNameChange(value, true)}
+          containerStyle={localStyles.inputHalvedWidth}
+          errorMessage={!data.isValidFirstName ? 'Invalid Input' : ''}
         />
-        <Input
+        <TextInput
           placeholder="Last Name"
-          onChangeText={value => setData({lastName: value})}
-          style={localStyles.inputText}
-          errorMessage={!data.isChangeTextEmpty ? 'Invalid Input' : ''}
-          renderErrorMessage={false}
+          onChangeText={value => handleNameChange(value, false)}
+          containerStyle={localStyles.inputHalvedWidth}
+          errorMessage={!data.isValidLastName ? 'Invalid Input' : ''}
         />
       </View>
-      <Input
+      <TextInput
         placeholder="E-mail Address"
         onChangeText={value => handleEmailChange(value)}
-        style={localStyles.inputText}
+        errorMessage={!data.isValidEmail ? 'Invalid Email' : ''}
         autoCapitalize="none"
       />
-      <Input
+      <TextInput
         placeholder="Username"
         onChangeText={value => handleUsernameChange(value)}
-        style={localStyles.inputText}
-        autoCapitalize="none"
         errorMessage={!data.isValidUsername ? 'Invalid Username' : ''}
-        renderErrorMessage={false}
+        autoCapitalize="none"
       />
-      <Input
+      <TextInput
         placeholder="Password"
         onChangeText={value => handlePasswordChange(value)}
-        secureTextEntry={true}
-        style={localStyles.inputText}
-        autoCapitalize="none"
         errorMessage={!data.isValidPassword ? 'Invalid Password' : ''}
-        renderErrorMessage={false}
+        autoCapitalize="none"
+        secureTextEntry={true}
       />
-      <Input
+      <TextInput
         placeholder="Confirm Password"
         onChangeText={value => handleMatchPassword(value)}
-        secureTextEntry={true}
-        style={localStyles.inputText}
-        autoCapitalize="none"
         errorMessage={!data.isPasswordMatch ? 'Password does not match' : ''}
-        renderErrorMessage={false}
+        autoCapitalize="none"
+        secureTextEntry={true}
       />
-      <View>
-        <View>
-          <Button
-            onPress={setShowDatePicker(true)}
-            title="Select Date of Birth"
-          />
-        </View>
-        {showDatePicker && (
-          <DateTimePicker
-            testID="dateTimePicker"
-            value={birthday}
-            mode={'date'}
-            is24Hour={true}
-            display="default"
-            onChange={(event, date) => setBirthday(date)}
-          />
-        )}
-      </View>
-      <View style={Styles.containers.horizontal}>
-        <Picker
-          style={Styles.texts.default}
+      <OverlayDatePicker
+        prompt={
+          'Birthday: ' +
+          birthday.getFullYear() +
+          '-' +
+          (birthday.getMonth() + 1) +
+          '-' +
+          birthday.getDate()
+        }
+        value={birthday}
+        onChange={date => setBirthday(date)}
+        maximumDate={new Date()}
+        promptStyle={localStyles.datePickerPrompt}
+      />
+      <View style={localStyles.horizontalContainer}>
+        <DropdownPicker
           selectedValue={gender}
-          onValueChange={(itemValue, itemIndex) => setGender(itemValue)}
-          prompt={'Gender'}>
-          <Picker.Item label="Male" value="M" />
-          <Picker.Item label="Female" value="F" />
-        </Picker>
-        <Picker
-          style={Styles.texts.default}
+          onValueChange={itemValue => setGender(itemValue)}
+          prompt={'Gender'}
+          pickerItems={genderOptions}
+          containerStyle={localStyles.pickerHalvedWidth}
+        />
+        <DropdownPicker
           selectedValue={pronoun}
-          onValueChange={(itemValue, itemIndex) => setPronoun(itemValue)}
-          prompt={'Pronoun'}>
-          <Picker.Item label="He" value="he" />
-          <Picker.Item label="She" value="she" />
-          <Picker.Item label="They" value="they" />
-        </Picker>
+          onValueChange={itemValue => setPronoun(itemValue)}
+          prompt={'Pronoun'}
+          pickerItems={pronounOptions}
+          containerStyle={localStyles.pickerHalvedWidth}
+        />
       </View>
-      <ButtonPrimary
-        title={'Sign Up'}
-        onPress={() => navigation.navigate('LoginScreen')}
-      />
-      <LabelNButton
-        label={'Incorrect user type? Already have an account?'}
-        title={'Return!'}
-        onPress={() => navigation.goBack()}
-      />
+      <View style={localStyles.footerContainer}>
+        <ButtonPrimary title={'Sign Up'} onPress={handleSignupClick} />
+        <Text
+          style={[
+            Styles.texts.secondary,
+            {marginTop: Styles.whitespaces.outer},
+          ]}>
+          {'Incorrect user type? Already have an account?'}
+        </Text>
+        <ButtonTextOnly title={'Return!'} onPress={() => navigation.goBack()} />
+      </View>
     </View>
   );
 };
@@ -192,12 +240,23 @@ const localStyles = StyleSheet.create({
     ...Styles.containers.pad,
     backgroundColor: '#fff',
   },
-  inputText: {
-    ...Styles.texts.default,
-    width: Styles.maxWidth,
+  footerContainer: {
+    paddingVertical: 28,
+    alignItems: 'center',
   },
-  inputContainer: {
-    marginTop: Styles.whitespaces.inner,
+  horizontalContainer: {
+    ...Styles.containers.horizontal,
+    justifyContent: 'space-between',
+  },
+  inputHalvedWidth: {
+    width: Styles.maxWidth / 2,
+  },
+  pickerHalvedWidth: {
+    width: Styles.maxWidth / 2 - Styles.whitespaces.inner,
+  },
+  datePickerPrompt: {
+    width: Styles.maxWidth - Styles.whitespaces.inner - 5,
+    marginTop: 30,
   },
 });
 

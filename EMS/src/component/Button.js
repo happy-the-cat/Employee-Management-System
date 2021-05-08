@@ -1,7 +1,9 @@
 import React from 'react';
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
-import * as Styles from '../styles';
+import * as Styles from '../Styles';
 import {Button} from 'react-native-elements';
+
+const Buttons = () => {};
 
 const ButtonPrimary = ({onPress, title, containerStyle, textStyle}) => (
   <View style={baseButtonStyles.buttonContainer}>
@@ -25,26 +27,15 @@ const ButtonSecondary = ({onPress, title, containerStyle, textStyle}) => (
   </View>
 );
 
-const LabelNButton = ({label, title, onPress, containerStyle, textStyle}) => {
-  return (
-    <View style={[containerStyle, Styles.containers.horizontal]}>
-      <Text style={[textStyle, Styles.texts.secondary]}>{label}</Text>
-      <Button
-        titleStyle={[
-          textStyle,
-          Styles.texts.secondaryEmphasis,
-          {color: Styles.colors.onBackground},
-        ]}
-        containerStyle={{
-          marginVertical: -10,
-        }}
-        onPress={onPress}
-        type="clear"
-        title={title}
-      />
-    </View>
-  );
-};
+const ButtonTextOnly = ({title, onPress, containerStyle, titleStyle}) => (
+  <Button
+    onPress={onPress}
+    containerStyle={[containerStyle, textOnlyStyles.button]}
+    title={title}
+    titleStyle={[titleStyle, textOnlyStyles.text]}
+    type="clear"
+  />
+);
 
 const baseButtonStyles = StyleSheet.create({
   buttonContainer: {
@@ -80,4 +71,14 @@ const secondaryStyles = StyleSheet.create({
   },
 });
 
-export {ButtonPrimary, ButtonSecondary, LabelNButton};
+const textOnlyStyles = StyleSheet.create({
+  button: {
+    marginVertical: -3,
+  },
+  text: {
+    ...Styles.texts.secondaryEmphasis,
+    color: Styles.colors.onBackground,
+  },
+});
+
+export {ButtonPrimary, ButtonSecondary, ButtonTextOnly};

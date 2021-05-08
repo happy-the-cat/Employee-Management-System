@@ -1,36 +1,34 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, StatusBar, Text, Image} from 'react-native';
-import {Picker} from '@react-native-picker/picker';
+import {View, StyleSheet, StatusBar, Text} from 'react-native';
 
-import {ButtonPrimary, ButtonSecondary} from '../../component/buttons';
-import * as Styles from '../../styles';
+import {ButtonPrimary, ButtonSecondary} from '../../component/Button';
+import {DropdownPicker} from '../../component/DropdownPicker';
+import * as Styles from '../../Styles';
 import WelcomeImg from '../../../assets/images/welcome_cats.svg';
 
 const WelcomeScreen = ({navigation}) => {
   const [selectedUserType, setSelectedUserType] = useState();
+  const userTypes = {
+    employee: 'Employee',
+    hr: 'Human Resources',
+  };
 
   return (
-    <View style={localStyles.container}>
+    <View style={localStyles.baseContainer}>
       <StatusBar
         backgroundColor={Styles.colors.light}
         barStyle="dark-content"
       />
       <Text style={Styles.texts.app_name}>Employee Management System</Text>
       <WelcomeImg height={'50%'} width={Styles.maxWidth} />
-      <View style={{flex: 1, justifyContent: 'center'}}>
+      <View style={localStyles.footerContainer}>
         <Text style={Styles.texts.title}> What are you? </Text>
-        <View style={localStyles.pickerContainer}>
-          <Picker
-            prompt={'Select User Type'}
-            style={localStyles.picker}
-            selectedValue={selectedUserType}
-            onValueChange={(itemValue, itemIndex) =>
-              setSelectedUserType(itemValue)
-            }>
-            <Picker.Item label="Employee" value="employee" />
-            <Picker.Item label="Human Resources" value="hr" />
-          </Picker>
-        </View>
+        <DropdownPicker
+          prompt="Select User Type"
+          selectedValue={selectedUserType}
+          onValueChange={itemValue => setSelectedUserType(itemValue)}
+          pickerItems={userTypes}
+        />
         <ButtonPrimary
           title={'Sign Up'}
           onPress={() => navigation.navigate('SignupScreen')}
@@ -47,18 +45,14 @@ const WelcomeScreen = ({navigation}) => {
 };
 
 const localStyles = StyleSheet.create({
-  container: {
+  baseContainer: {
     ...Styles.containers.fill,
     ...Styles.containers.pad,
     backgroundColor: '#fff',
   },
-  picker: {
-    ...Styles.texts.default,
-  },
-  pickerContainer: {
-    marginVertical: Styles.whitespaces.inner,
-    borderColor: Styles.colors.lightGray,
-    elevation: 4,
+  footerContainer: {
+    flex: 1,
+    justifyContent: 'center',
   },
 });
 
