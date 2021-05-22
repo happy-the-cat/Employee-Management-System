@@ -1,0 +1,7 @@
+Email Format Validation:
+https://stackoverflow.com/a/43692170
+
+PickerItems Array Map w/ Keys
+https://stackoverflow.com/a/43016866
+
+

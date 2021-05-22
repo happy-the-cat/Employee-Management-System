@@ -1,22 +1,191 @@
 import React from 'react';
+import {View, StyleSheet, ActivityIndicator} from 'react-native';
 
 import 'react-native-gesture-handler';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
-import RootStackScreen from './src/screens/rootScreens/RootStackScreen';
+import {AuthContext} from './src/component/Context';
+
+import WelcomeScreen from './src/screens/rootScreens/WelcomeScreen';
+import LoginScreen from './src/screens/rootScreens/LoginScreen';
+import SignupScreen from './src/screens/rootScreens/SignupScreen';
+import HomeScreen from './src/screens/HomeScreen';
+import EmployeeStack from './src/screens/employeeScreens/EmployeeStack';
+import HRStack from './src/screens/hrScreens/HRStack';
 
 const Stack = createStackNavigator();
 
 const App = () => {
+  // const [isLoading, setIsLoading] = React.useState(true);
+  // const [userToken, setUserToken] = React.useState(null);
+  const userType = 'employee'; /*TODO: test, remove later*/
+  const initialLoginState = {
+    isLoading: true,
+    userName: null,
+    userToken: 'null',
+  };
+
+  const loginReducer = (prevState, action) => {
+    switch (action.type) {
+      case 'RETRIEVE_TOKEN':
+        return {
+          ...prevState,
+          userToken: action.token,
+          isLoading: false,
+        };
+      case 'LOGIN':
+        return {
+          ...prevState,
+          userName: action.id,
+          userToken: action.token,
+          isLoading: false,
+        };
+      case 'LOGOUT':
+        return {
+          ...prevState,
+          userName: null,
+          userToken: null,
+          isLoading: false,
+        };
+      case 'REGISTER':
+        return {
+          ...prevState,
+          userName: action.id,
+          userToken: action.token,
+          isLoading: false,
+        };
+    }
+  };
+
+  const [loginState, dispatch] = React.useReducer(
+    loginReducer,
+    initialLoginState,
+  );
+
+  const authContext = React.useMemo(
+    () => ({
+      signIn: async (userType, userName, password) => {
+        /*TODO: actual scenario username and password r fetch by some API then
+         *  match against some user-pass in the database,
+         *  token is also retrieved from database */
+        let userToken;
+        userToken = null;
+        if (userName === 'user' && password === 'pass') {
+          try {
+            userToken = 'dummy-tokenn';
+            await EncryptedStorage.setItem(
+              'userSession',
+              JSON.stringify({
+                userToken: userToken,
+                userType: userType,
+              }),
+            );
+          } catch (e) {
+            console.log(e);
+          }
+        }
+        console.log('user token: ', userToken);
+        dispatch({type: 'LOGIN', id: userName, token: userToken});
+      },
+      signOut: async () => {
+        try {
+          await EncryptedStorage.removeItem('userSession');
+        } catch (e) {
+          console.log(e);
+        }
+        dispatch({type: 'LOGOUT'});
+      },
+      signUp: () => {
+        // setUserToken('fdfg');
+        // setIsLoading(false);
+      },
+    }),
+    [],
+  );
+  //
+  // React.useEffect(() => {
+  //   setTimeout(async () => {
+  //     /* TODO: fetch some token from storage or database */
+  //     let userToken = null;
+  //     try {
+  //       const session = await EncryptedStorage.getItem('userSession');
+  //       userToken = session.getItem('userToken');
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //     console.log('user token: ', userToken);
+  //     dispatch({type: 'SIGNUP', token: userToken});
+  //   }, 1000);
+  // }, []);
+  //
+  // if (loginState.isLoading) {
+  //   return (
+  //     <View style={localStyles.loadingContainer}>
+  //       <ActivityIndicator size="large" />
+  //     </View>
+  //   );
+  // }
+
   return (
-    <NavigationContainer>
-      <RootStackScreen />
-      {/*<Stack.Navigator></Stack.Navigator>*/}
-    </NavigationContainer>
+    <AuthContext.Provider value={authContext}>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <Stack.Navigator headerMode="none">
+            {loginState.userToken !== null ? (
+              <>
+                {/* TODO: Insert Tab Navigation & Screens */}
+                <Stack.Screen
+                  options={{headerShown: false}}
+                  name="Home"
+                  component={HomeScreen}
+                  initialParams={{userType: userType}}
+                />
+                {userType.toLowerCase() === 'hr' ? (
+                  <Stack.Screen name="HRScreens" component={HRStack} />
+                ) : (
+                  <Stack.Screen
+                    name="EmployeeScreens"
+                    component={EmployeeStack}
+                  />
+                )}
+              </>
+            ) : (
+              <>
+                <Stack.Screen
+                  name="Welcome"
+                  component={WelcomeScreen}
+                  options={{headerShown: false}}
+                />
+                <Stack.Screen
+                  name="Login"
+                  component={LoginScreen}
+                  options={{headerShown: false}}
+                />
+                <Stack.Screen
+                  name="Signup"
+                  component={SignupScreen}
+                  options={{headerShown: false}}
+                />
+              </>
+            )}
+          </Stack.Navigator>
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </AuthContext.Provider>
   );
 };
+
+const localStyles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default App;
 

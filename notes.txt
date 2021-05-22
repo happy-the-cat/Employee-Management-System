@@ -20,6 +20,7 @@ Dependencies Packages:
 - react-native-modal-datetime-picker
 - react-native-linear-gradient
 - react-native-svg & react-native-svg-transformer (dev dep.)
+- React Native Encrypted Storage
 
 React Navigation:
 https://reactnavigation.org/docs/getting-started
@@ -53,4 +54,6 @@ https://github.com/kristerkari/react-native-svg-transformer
 	yarn add --dev react-native-svg-transformer
 	*metro configurations
 
-
+React Native Encrypted Storage
+https://github.com/emeraldsanto/react-native-encrypted-storage
+	yarn add react-native-encrypted-storage

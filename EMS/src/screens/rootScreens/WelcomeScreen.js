@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
 import {View, StyleSheet, StatusBar, Text} from 'react-native';
 
+import {SafeAreaView} from 'react-native-safe-area-context';
+
 import {ButtonPrimary, ButtonSecondary} from '../../component/Button';
 import {DropdownPicker} from '../../component/DropdownPicker';
 import * as Styles from '../../Styles';
@@ -14,13 +16,13 @@ const WelcomeScreen = ({navigation}) => {
   };
 
   return (
-    <View style={localStyles.baseContainer}>
+    <SafeAreaView style={localStyles.baseContainer}>
       <StatusBar
         backgroundColor={Styles.colors.light}
         barStyle="dark-content"
       />
-      <Text style={Styles.texts.app_name}>Employee Management System</Text>
-      <WelcomeImg height={'50%'} width={Styles.maxWidth} />
+      <Text style={localStyles.appName}>Employee Management System</Text>
+      <WelcomeImg height={Styles.maxHeight / 3} width={Styles.maxWidth - 20} />
       <View style={localStyles.footerContainer}>
         <Text style={Styles.texts.title}> What are you? </Text>
         <DropdownPicker
@@ -31,28 +33,38 @@ const WelcomeScreen = ({navigation}) => {
         />
         <ButtonPrimary
           title={'Sign Up'}
-          onPress={() => navigation.navigate('SignupScreen')}
+          onPress={() =>
+            navigation.navigate('Signup', {userType: selectedUserType})
+          }
           containerStyle={{marginVertical: Styles.whitespaces.inner}}
         />
         <ButtonSecondary
           title={'Log In'}
-          onPress={() => navigation.navigate('LoginScreen')}
+          onPress={() =>
+            navigation.navigate('Login', {userType: selectedUserType})
+          }
           containerStyle={{marginVertical: Styles.whitespaces.inner}}
         />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const localStyles = StyleSheet.create({
   baseContainer: {
     ...Styles.containers.fill,
-    ...Styles.containers.pad,
-    backgroundColor: '#fff',
+    backgroundColor: Styles.colors.light,
+    alignItems: 'center',
   },
   footerContainer: {
-    flex: 1,
+    ...Styles.containers.fill,
+    ...Styles.containers.pad,
+    paddingTop: 0,
     justifyContent: 'center',
+  },
+  appName: {
+    ...Styles.texts.app_name,
+    ...Styles.containers.pad,
   },
 });
 

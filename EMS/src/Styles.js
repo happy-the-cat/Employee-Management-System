@@ -1,6 +1,7 @@
 import {StyleSheet, Dimensions} from 'react-native';
 
 const maxWidth = Dimensions.get('window').width - 30 * 2;
+const maxHeight = Dimensions.get('window').height - 30 * 2;
 
 const whitespaces = {
   margin: 30,
@@ -45,16 +46,23 @@ const texts = StyleSheet.create({
     fontFamily: 'Oxygen-Regular',
   },
   secondaryEmphasis: {
-    fontFamily: 'Oxygen-Regular',
     fontSize: 14,
+    fontFamily: 'Oxygen-Regular',
     fontWeight: 'bold',
-    alignSelf: 'center',
   },
   secondaryCaps: {
-    fontFamily: 'Oxygen',
     fontSize: 14,
-    alignSelf: 'center',
+    fontFamily: 'Oxygen',
     textTransform: 'uppercase',
+  },
+  tertiary: {
+    fontSize: 12,
+    fontFamily: 'Oxygen-Regular',
+  },
+  tertiaryEmphasis: {
+    fontSize: 12,
+    fontFamily: 'Oxygen-Regular',
+    fontWeight: 'bold',
   },
 });
 
@@ -67,9 +75,8 @@ const containers = StyleSheet.create({
   },
   horizontal: {
     flexDirection: 'row',
-    alignSelf: 'center',
     justifyContent: 'flex-start',
   },
 });
 
-export {colors, texts, containers, maxWidth, whitespaces};
+export {colors, texts, containers, maxWidth, maxHeight, whitespaces};

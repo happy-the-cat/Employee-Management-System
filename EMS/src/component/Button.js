@@ -1,7 +1,9 @@
 import React from 'react';
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
-import * as Styles from '../Styles';
+
 import {Button} from 'react-native-elements';
+
+import * as Styles from '../Styles';
 
 const Buttons = () => {};
 
@@ -57,6 +59,7 @@ const primaryStyles = StyleSheet.create({
   text: {
     ...Styles.texts.secondaryEmphasis,
     color: Styles.colors.onPrimary,
+    alignSelf: 'center',
   },
 });
 
@@ -64,10 +67,13 @@ const secondaryStyles = StyleSheet.create({
   button: {
     ...baseButtonStyles.baseButton,
     backgroundColor: Styles.colors.light,
+    borderWidth: 0.5,
+    borderColor: Styles.colors.lightGray,
   },
   text: {
     ...Styles.texts.secondaryEmphasis,
     color: Styles.colors.onBackground,
+    alignSelf: 'center',
   },
 });
 
@@ -78,6 +84,7 @@ const textOnlyStyles = StyleSheet.create({
   text: {
     ...Styles.texts.secondaryEmphasis,
     color: Styles.colors.onBackground,
+    alignSelf: 'center',
   },
 });
 
