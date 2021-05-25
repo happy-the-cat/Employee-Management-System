@@ -1,14 +1,14 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 
-import DepartmentsScreen from './DepartmentsScreen';
+import DepartmentsStack from './DepartmentsScreen';
 
 const Stack = createStackNavigator();
 
 const HRStack = ({navigation}) => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Departments" component={DepartmentsScreen} />
+      <Stack.Screen name="Departments" component={DepartmentsStack} />
     </Stack.Navigator>
   );
 };

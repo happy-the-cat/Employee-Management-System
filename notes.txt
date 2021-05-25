@@ -21,6 +21,8 @@ Dependencies Packages:
 - react-native-linear-gradient
 - react-native-svg & react-native-svg-transformer (dev dep.)
 - React Native Encrypted Storage
+- react-native-get-random-values & NanoID (no need install)
+- React Native Floating Action
 
 React Navigation:
 https://reactnavigation.org/docs/getting-started
@@ -57,3 +59,17 @@ https://github.com/kristerkari/react-native-svg-transformer
 React Native Encrypted Storage
 https://github.com/emeraldsanto/react-native-encrypted-storage
 	yarn add react-native-encrypted-storage
+
+react-native-get-random-values & NanoID
+https://github.com/LinusU/react-native-get-random-values
+https://github.com/ai/nanoid#react-native
+	npm install --save react-native-get-random-values
+
+React Native Floating Action
+https://github.com/santomegonzalo/react-native-floating-action
+	yarn add react-native-floating-action
+npm i react-native-action-button --save
+
+React Native Restart
+https://github.com/avishayil/react-native-restart
+	yarn add react-native-restart

@@ -1,27 +1,50 @@
 import React from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, ScrollView, Text, View} from 'react-native';
 
-import {SearchBar} from 'react-native-elements';
+import {ListItem, SearchBar} from 'react-native-elements';
 
 import * as Styles from '../Styles';
 
-const SearchField = ({placeholder, onChangeText, value, lightTheme}) => {
-  return (
+const SearchField = React.forwardRef(
+  ({placeholder, onChangeText, value, lightTheme}, ref) => (
     <SearchBar
+      ref={ref}
       placeholder={placeholder}
       onChangeText={onChangeText}
       value={value}
       platform="default"
       lightTheme={lightTheme}
-      containerStyle={localStyles.container}
-      inputContainerStyle={localStyles.inputContainer}
-      inputStyle={localStyles.inputText}
+      containerStyle={fieldStyles.container}
+      inputContainerStyle={fieldStyles.inputContainer}
+      inputStyle={fieldStyles.inputText}
       placeholderTextColor={Styles.colors.gray}
     />
-  );
-};
+  ),
+);
 
-const localStyles = StyleSheet.create({
+const SearchDropDown = ({onPressItem, content, noResultPrompt}) => (
+  <View style={dropDownStyles.mainContainer}>
+    {content.length ? (
+      content.map(item => (
+        <ListItem
+          key={item.id}
+          onPress={() => onPressItem(item.id)}
+          bottomDivider
+          containerStyle={dropDownStyles.listContainer}>
+          <ListItem.Content>
+            <ListItem.Title style={dropDownStyles.listText}>
+              {item.name}
+            </ListItem.Title>
+          </ListItem.Content>
+        </ListItem>
+      ))
+    ) : (
+      <Text style={dropDownStyles.noResultText}>{noResultPrompt}</Text>
+    )}
+  </View>
+);
+
+const fieldStyles = StyleSheet.create({
   container: {
     marginVertical: Styles.whitespaces.inner,
     backgroundColor: Styles.colors.light,
@@ -42,4 +65,32 @@ const localStyles = StyleSheet.create({
   },
 });
 
-export {SearchField};
+const dropDownStyles = StyleSheet.create({
+  baseContainer: {},
+  mainContainer: {
+    position: 'absolute',
+    top: 65,
+    left: 0,
+    right: 0,
+    //maxHeight: Styles.maxHeight / 2,
+    backgroundColor: Styles.colors.secondary,
+    padding: Styles.whitespaces.inner / 2,
+    borderRadius: 5,
+  },
+  listContainer: {
+    width: '100%',
+    borderRadius: 1,
+    paddingVertical: Styles.whitespaces.inner / 2,
+    paddingHorizontal: Styles.whitespaces.outer,
+  },
+  listText: {
+    ...Styles.texts.default,
+  },
+  noResultText: {
+    ...Styles.texts.secondary,
+    textAlign: 'center',
+    marginHorizontal: Styles.whitespaces.outer,
+  },
+});
+
+export {SearchField, SearchDropDown};

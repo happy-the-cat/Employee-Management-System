@@ -3,8 +3,8 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
 import * as Styles from '../Styles';
 
-const IconCard = ({keyId, title, onPress, image, containerStyle}) => (
-  <View key={keyId} style={[containerStyle, iconCardStyles.baseContainer]}>
+const IconCard = ({title, onPress, image, containerStyle}) => (
+  <View style={[containerStyle, iconCardStyles.baseContainer]}>
     <TouchableOpacity onPress={onPress} style={iconCardStyles.buttonContainer}>
       {image}
       <Text style={iconCardStyles.text}>{title}</Text>

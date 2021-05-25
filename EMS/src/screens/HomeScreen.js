@@ -1,17 +1,13 @@
 import React from 'react';
-import {
-  View,
-  StyleSheet,
-  Text,
-  StatusBar,
-  ScrollView,
-  Image,
-} from 'react-native';
+import {View, StyleSheet, Text, ScrollView, Image} from 'react-native';
+import 'react-native-get-random-values';
+import {nanoid} from 'nanoid';
 
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {RoundAvatar} from '../component/Avatar';
 import {IconCard} from '../component/IconCard';
+import {FocusAwareStatusBar} from '../component/FocusAwareStatusBar';
 
 import * as Styles from '../Styles';
 import AttendanceImg from '../../assets/featuresIcons/attendance.svg';
@@ -30,14 +26,9 @@ const HomeScreen = ({navigation, route}) => {
   const user = {
     /* TODO: retrieve user credentials from database */
     name: 'Mia Smith',
-    department: 'Marketing',
+    department: 'Information Technology',
   };
   const features = [
-    {
-      title: 'Attendance',
-      image: <AttendanceImg height={imgHeight} width={imgWidth} />,
-      screen: userType.toLowerCase() === 'hr' ? '' : '',
-    },
     {
       title: 'Timesheet',
       image: <TimesheetImg height={imgHeight} width={imgWidth} />,
@@ -84,7 +75,7 @@ const HomeScreen = ({navigation, route}) => {
 
   return (
     <SafeAreaView style={localStyles.baseContainer}>
-      <StatusBar
+      <FocusAwareStatusBar
         backgroundColor={Styles.colors.primaryLight}
         barStyle="dark-content"
       />
@@ -96,9 +87,7 @@ const HomeScreen = ({navigation, route}) => {
         <View style={localStyles.headerContainer}>
           <RoundAvatar
             containerStyle={localStyles.headerAvatar}
-            onPress={() =>
-              console.log('pressed avatar')
-            } /*TODO: Add some action*/
+            onPress={() => navigation.navigate('Profile')}
           />
           <View style={localStyles.headerTextContainer}>
             {/* TODO: add user's name and department prop */}
@@ -111,10 +100,9 @@ const HomeScreen = ({navigation, route}) => {
           {features.map((value, index, array) => {
             if (index % 2 === 0) {
               return (
-                <View style={Styles.containers.horizontal}>
+                <View key={nanoid()} style={Styles.containers.horizontal}>
                   {value.screen !== null ? (
                     <IconCard
-                      keyId={index}
                       title={value.title}
                       onPress={value.screen}
                       image={value.image}
@@ -124,7 +112,6 @@ const HomeScreen = ({navigation, route}) => {
                   {index + 1 < array.length &&
                   array[index + 1].screen !== null ? (
                     <IconCard
-                      keyId={index + 1}
                       title={array[index + 1].title}
                       onPress={array[index + 1].screen}
                       image={array[index + 1].image}

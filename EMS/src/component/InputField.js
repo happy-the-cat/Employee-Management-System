@@ -5,7 +5,7 @@ import {Input} from 'react-native-elements';
 
 import * as Styles from '../Styles';
 
-const TextInput = ({
+const InputField = ({
   placeholder,
   onChangeText,
   errorMessage,
@@ -34,4 +34,4 @@ const inputStyles = StyleSheet.create({
   },
 });
 
-export {TextInput};
+export {InputField};

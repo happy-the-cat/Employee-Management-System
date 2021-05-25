@@ -5,19 +5,25 @@ import {ListItem} from 'react-native-elements';
 
 import * as Styles from '../Styles';
 
-const Accordion = ({keyId, titleContent, items, topDivider, bottomDivider}) => {
+const Accordion = ({
+  titleContent,
+  items,
+  topDivider,
+  bottomDivider,
+  onLayout,
+}) => {
   const [expanded, setExpanded] = useState(false);
 
   return (
     <ListItem.Accordion
       topDivider={topDivider}
       bottomDivider={bottomDivider}
-      key={keyId}
       content={titleContent}
       isExpanded={expanded}
       onPress={() => {
         setExpanded(!expanded);
-      }}>
+      }}
+      onLayout={onLayout}>
       {items}
     </ListItem.Accordion>
   );

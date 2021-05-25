@@ -4,25 +4,30 @@ import {View, StyleSheet, ActivityIndicator} from 'react-native';
 import 'react-native-gesture-handler';
 
 import {NavigationContainer} from '@react-navigation/native';
+import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
+import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
 import {AuthContext} from './src/component/Context';
 
-import WelcomeScreen from './src/screens/rootScreens/WelcomeScreen';
-import LoginScreen from './src/screens/rootScreens/LoginScreen';
-import SignupScreen from './src/screens/rootScreens/SignupScreen';
-import HomeScreen from './src/screens/HomeScreen';
+import RootStack from './src/screens/rootScreens/RootStack';
 import EmployeeStack from './src/screens/employeeScreens/EmployeeStack';
 import HRStack from './src/screens/hrScreens/HRStack';
+import AttendanceScreen from './src/screens/AttendanceScreen';
+import HomeScreen from './src/screens/HomeScreen';
+import ProfileScreen from './src/screens/ProfileScreen';
 
 const Stack = createStackNavigator();
+const Tab = createMaterialBottomTabNavigator();
+
+const NotificationsScreen = () => {
+  return <SafeAreaView />;
+};
 
 const App = () => {
-  // const [isLoading, setIsLoading] = React.useState(true);
-  // const [userToken, setUserToken] = React.useState(null);
-  const userType = 'employee'; /*TODO: test, remove later*/
+  const userType = 'hr'; /*TODO: test, remove later*/
   const initialLoginState = {
     isLoading: true,
     userName: null,
@@ -130,49 +135,128 @@ const App = () => {
   //   );
   // }
 
+  const HomeStack = () => {
+    return (
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          initialParams={{userType: userType}}
+          options={{headerShown: false}}
+        />
+        {userType.toLowerCase() === 'hr' ? (
+          <Stack.Screen
+            name="HRScreens"
+            component={HRStack}
+            options={{headerShown: false}}
+          />
+        ) : (
+          <Stack.Screen
+            name="EmployeeScreens"
+            component={EmployeeStack}
+            options={{headerShown: false}}
+          />
+        )}
+        <Stack.Screen
+          name={'Profile'}
+          component={ProfileScreen}
+          options={({navigation}) => ({
+            headerStyle: {
+              backgroundColor: 'white',
+            },
+            headerLeft: () => (
+              <Ionicons
+                style={{marginLeft: 16}}
+                name={'arrow-back-outline'}
+                color={'green'}
+                size={24}
+                onPress={() => {
+                  navigation.navigate('Home');
+                }}
+              />
+            ),
+            headerBackTitleVisible: false,
+            headerTitle: '',
+            headerRight: () => (
+              <Ionicons
+                style={{marginRight: 16}}
+                name={'pencil-outline'}
+                color={'green'}
+                size={24}
+              />
+            ),
+          })}
+        />
+      </Stack.Navigator>
+    );
+  };
+
   return (
     <AuthContext.Provider value={authContext}>
       <SafeAreaProvider>
         <NavigationContainer>
-          <Stack.Navigator headerMode="none">
-            {loginState.userToken !== null ? (
-              <>
-                {/* TODO: Insert Tab Navigation & Screens */}
-                <Stack.Screen
-                  options={{headerShown: false}}
-                  name="Home"
-                  component={HomeScreen}
-                  initialParams={{userType: userType}}
-                />
-                {userType.toLowerCase() === 'hr' ? (
-                  <Stack.Screen name="HRScreens" component={HRStack} />
-                ) : (
-                  <Stack.Screen
-                    name="EmployeeScreens"
-                    component={EmployeeStack}
-                  />
-                )}
-              </>
-            ) : (
-              <>
-                <Stack.Screen
-                  name="Welcome"
-                  component={WelcomeScreen}
-                  options={{headerShown: false}}
-                />
-                <Stack.Screen
-                  name="Login"
-                  component={LoginScreen}
-                  options={{headerShown: false}}
-                />
-                <Stack.Screen
-                  name="Signup"
-                  component={SignupScreen}
-                  options={{headerShown: false}}
-                />
-              </>
-            )}
-          </Stack.Navigator>
+          {loginState.userToken !== null ? (
+            <Tab.Navigator initialRouteName={HomeStack} labeled={false}>
+              <Tab.Screen
+                name={'Home'}
+                component={HomeStack}
+                options={{
+                  tabBarIcon: ({focused, color}) => (
+                    <Ionicons
+                      name={focused ? 'apps' : 'apps-outline'}
+                      color={color}
+                      size={24}
+                    />
+                  ),
+                  tabBarColor: 'darkblue',
+                }}
+              />
+              <Tab.Screen
+                name={'Profile'}
+                component={ProfileScreen}
+                options={{
+                  tabBarIcon: ({focused, color}) => (
+                    <Ionicons
+                      name={focused ? 'person' : 'person-outline'}
+                      color={color}
+                      size={24}
+                    />
+                  ),
+                  tabBarColor: 'darkgreen',
+                }}
+              />
+              <Tab.Screen
+                name={'Notifications'}
+                component={NotificationsScreen}
+                options={{
+                  tabBarIcon: ({focused, color}) => (
+                    <Ionicons
+                      name={focused ? 'notifications' : 'notifications-outline'}
+                      color={color}
+                      size={24}
+                    />
+                  ),
+                  tabBarColor: 'darkred',
+                }}
+              />
+              <Tab.Screen
+                name={'Attendance'}
+                component={AttendanceScreen}
+                options={{
+                  tabBarIcon: ({focused, color}) => (
+                    <Ionicons
+                      name={focused ? 'alarm' : 'alarm-outline'}
+                      color={color}
+                      size={24}
+                    />
+                  ),
+                  tabBarColor: 'indigo',
+                }}
+              />
+            </Tab.Navigator>
+          ) : (
+            <RootStack />
+          )}
         </NavigationContainer>
       </SafeAreaProvider>
     </AuthContext.Provider>

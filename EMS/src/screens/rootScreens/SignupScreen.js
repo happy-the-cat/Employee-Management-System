@@ -5,7 +5,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {AuthContext} from '../../component/Context';
 import {ButtonPrimary, ButtonTextOnly} from '../../component/Button';
-import {TextInput} from '../../component/TextInput';
+import {InputField} from '../../component/InputField';
 import {DropdownPicker} from '../../component/DropdownPicker';
 import {OverlayDatePicker} from '../../component/OverlayDatePicker';
 
@@ -160,39 +160,39 @@ const SignupScreen = ({navigation, route}) => {
       <ScrollView style={Styles.containers.pad}>
         <Text style={Styles.texts.title}> Sign Up </Text>
         <View style={localStyles.horizontalContainer}>
-          <TextInput
+          <InputField
             placeholder="First Name"
             onChangeText={value => handleNameChange(value, true)}
             containerStyle={localStyles.inputHalvedWidth}
             errorMessage={!data.isValidFirstName ? 'Invalid Input' : ''}
           />
-          <TextInput
+          <InputField
             placeholder="Last Name"
             onChangeText={value => handleNameChange(value, false)}
             containerStyle={localStyles.inputHalvedWidth}
             errorMessage={!data.isValidLastName ? 'Invalid Input' : ''}
           />
         </View>
-        <TextInput
+        <InputField
           placeholder="E-mail Address"
           onChangeText={value => handleEmailChange(value)}
           errorMessage={!data.isValidEmail ? 'Invalid Email' : ''}
           autoCapitalize="none"
         />
-        <TextInput
+        <InputField
           placeholder="Username"
           onChangeText={value => handleUsernameChange(value)}
           errorMessage={!data.isValidUsername ? 'Invalid Username' : ''}
           autoCapitalize="none"
         />
-        <TextInput
+        <InputField
           placeholder="Password"
           onChangeText={value => handlePasswordChange(value)}
           errorMessage={!data.isValidPassword ? 'Invalid Password' : ''}
           autoCapitalize="none"
           secureTextEntry={true}
         />
-        <TextInput
+        <InputField
           placeholder="Confirm Password"
           onChangeText={value => handleMatchPassword(value)}
           errorMessage={!data.isPasswordMatch ? 'Password does not match' : ''}

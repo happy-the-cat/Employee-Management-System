@@ -5,7 +5,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 
 import {AuthContext} from '../../component/Context';
 import {ButtonPrimary, ButtonTextOnly} from '../../component/Button';
-import {TextInput} from '../../component/TextInput';
+import {InputField} from '../../component/InputField';
 
 import * as Styles from '../../Styles';
 
@@ -68,13 +68,13 @@ const LoginScreen = ({navigation, route}) => {
       />
       <LoginImg height={'40%'} width={Styles.maxWidth} />
       <Text style={localStyles.header}> Log In </Text>
-      <TextInput
+      <InputField
         placeholder="Enter Username"
         onChangeText={value => handleUsernameChange(value)}
         errorMessage={!data.isValidUsername ? 'Invalid Username' : ''}
         autoCapitalize="none"
       />
-      <TextInput
+      <InputField
         placeholder="Enter Password"
         onChangeText={value => handlePasswordChange(value)}
         errorMessage={!data.isValidPassword ? 'Invalid Password' : ''}
