@@ -54,11 +54,10 @@ const HomeScreen = ({navigation, route}) => {
       image: <DepartmentsImg height={imgHeight} width={imgWidth} />,
       screen:
         userType.toLowerCase() === 'hr'
-          ? () =>
-              navigation.navigate('HRScreens', {screen: 'DepartmentsScreen'})
+          ? () => navigation.navigate('HRScreens', {screen: 'Departments'})
           : () =>
               navigation.navigate('EmployeeScreens', {
-                screen: 'DepartmentsScreen',
+                screen: 'Departments',
               }),
     },
     {
@@ -86,8 +85,8 @@ const HomeScreen = ({navigation, route}) => {
         />
         <View style={localStyles.headerContainer}>
           <RoundAvatar
+            title={user.name[0]}
             containerStyle={localStyles.headerAvatar}
-            onPress={() => navigation.navigate('Profile')}
           />
           <View style={localStyles.headerTextContainer}>
             {/* TODO: add user's name and department prop */}

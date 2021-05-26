@@ -8,7 +8,11 @@ const Stack = createStackNavigator();
 const HRStack = ({navigation}) => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Departments" component={DepartmentsStack} />
+      <Stack.Screen
+        name="Departments"
+        component={DepartmentsStack}
+        options={{headerShown: false}}
+      />
     </Stack.Navigator>
   );
 };

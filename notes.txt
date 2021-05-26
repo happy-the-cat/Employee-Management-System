@@ -23,6 +23,7 @@ Dependencies Packages:
 - React Native Encrypted Storage
 - react-native-get-random-values & NanoID (no need install)
 - React Native Floating Action
+- react-native-animatable
 
 React Navigation:
 https://reactnavigation.org/docs/getting-started
@@ -70,6 +71,6 @@ https://github.com/santomegonzalo/react-native-floating-action
 	yarn add react-native-floating-action
 npm i react-native-action-button --save
 
-React Native Restart
-https://github.com/avishayil/react-native-restart
-	yarn add react-native-restart
+react-native-animatable
+https://github.com/oblador/react-native-animatable
+	yarn add react-native-animatable

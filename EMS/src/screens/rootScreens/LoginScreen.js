@@ -15,9 +15,9 @@ const LoginScreen = ({navigation, route}) => {
   const [data, setData] = useState({
     username: '',
     password: '',
-    isValidUsername: true,
-    isValidPassword: true,
-    secureTextEntry: true,
+    isValidUsername: false,
+    isValidPassword: false,
+    secureTextEntry: false,
   });
   const {userType} = route.params;
   const {signIn} = React.useContext(AuthContext);

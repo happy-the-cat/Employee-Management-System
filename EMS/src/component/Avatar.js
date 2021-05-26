@@ -5,11 +5,12 @@ import {Avatar} from 'react-native-elements';
 
 import * as Styles from '../Styles';
 
-const RoundAvatar = ({source, onPress, size, containerStyle}) => (
+const RoundAvatar = ({source, onPress, size, containerStyle, title}) => (
   <Avatar
     rounded
     source={source}
-    icon={{name: 'person', type: 'octicon'}}
+    //icon={{name: 'person', type: 'octicon'}}
+    title={title}
     size={size !== undefined ? size : 'medium'}
     containerStyle={[avatarStyles.container, containerStyle]}
     onPress={onPress}
@@ -18,7 +19,7 @@ const RoundAvatar = ({source, onPress, size, containerStyle}) => (
 
 const avatarStyles = StyleSheet.create({
   container: {
-    backgroundColor: Styles.colors.lightGray,
+    backgroundColor: Styles.colors.primary,
   },
 });
 

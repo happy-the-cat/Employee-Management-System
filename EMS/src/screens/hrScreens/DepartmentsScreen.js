@@ -4,14 +4,17 @@ import {Text, StyleSheet, StatusBar, ScrollView, Alert} from 'react-native';
 import 'react-native-get-random-values';
 import {nanoid} from 'nanoid';
 
-import {createStackNavigator} from '@react-navigation/stack';
+import {createStackNavigator, HeaderBackButton} from '@react-navigation/stack';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ListItem, Overlay} from 'react-native-elements';
 import {FloatingAction} from 'react-native-floating-action';
 import Icon from 'react-native-vector-icons/Octicons';
+import * as Animatable from 'react-native-animatable';
 
-import {RoundAvatar} from '../../component/Avatar';
-import {Accordion} from '../../component/Accordion';
+import {
+  DepartmentAccordionItem,
+  MemberListItem,
+} from '../../component/DepartmentsLists';
 import {SearchDropDown, SearchField} from '../../component/SearchField';
 import {ButtonPrimary} from '../../component/Button';
 import {InputField} from '../../component/InputField';
@@ -20,57 +23,7 @@ import * as Styles from '../../Styles';
 
 const Stack = createStackNavigator();
 
-const Member = ({type, name, onPress, hideChevron, chevronProps}) => (
-  <ListItem onPress={onPress /*TODO: add some action for clicking a member*/}>
-    <RoundAvatar
-      size="small"
-      /*TODO: Add source for picture*/
-    />
-    <ListItem.Content>
-      {type === 'head' ? (
-        <>
-          <ListItem.Title>{name}</ListItem.Title>
-          <ListItem.Subtitle>Department Head</ListItem.Subtitle>
-        </>
-      ) : (
-        <ListItem.Title>{name}</ListItem.Title>
-      )}
-    </ListItem.Content>
-    {!hideChevron ? <ListItem.Chevron {...chevronProps} /> : null}
-  </ListItem>
-);
-
-const Department = ({department, onLayout}) => (
-  <Accordion
-    topDivider
-    onLayout={onLayout}
-    titleContent={
-      <ListItem.Content>
-        <ListItem.Title>{department.name}</ListItem.Title>
-      </ListItem.Content>
-    }
-    items={
-      <>
-        {department.head.length > 0 ? (
-          <Member
-            type="head"
-            name={department.head}
-            onPress={null /*TODO: add some action for clicking dept. head*/}
-          />
-        ) : null}
-        {department.members.map(member => (
-          <Member
-            key={member.id}
-            name={member.name}
-            onPress={null /*TODO: add some action for clicking a member*/}
-          />
-        ))}
-      </>
-    }
-  />
-);
-
-const DepartmentsScreen = ({navigation}) => {
+const OrganizationsScreen = ({navigation}) => {
   const [data, setData] = useState([
     /*TODO: retrieve data and IDs from database. This is only a dummy data.*/
     {
@@ -149,17 +102,17 @@ const DepartmentsScreen = ({navigation}) => {
   const handleSearch = input => {
     // based on https://swairaq.medium.com/react-native-dropdown-searchbar-adc4532f7535
     if (input) {
-      const temp = input.toLowerCase();
+      const temp = input.trim().toLowerCase();
       const filteredData =
         searchData.searchList === undefined ||
         searchData.searchList.length === 0
           ? data.filter(item => {
-              if (item.name.toLowerCase().match(temp)) {
+              if (item.name.trim().toLowerCase().match(temp)) {
                 return item;
               }
             })
           : searchData.searchList.filter(item => {
-              if (item.name.toLowerCase().match(temp)) {
+              if (item.name.trim().toLowerCase().match(temp)) {
                 return item;
               }
             });
@@ -311,8 +264,7 @@ const DepartmentsScreen = ({navigation}) => {
               />
               <ButtonPrimary
                 title="Update"
-                onPress={() => null}
-                //onPress={() => updateDepartment()}
+                onPress={() => updateDepartment()}
                 containerStyle={localStyles.overlayButton}
               />
             </>
@@ -330,8 +282,8 @@ const DepartmentsScreen = ({navigation}) => {
       if (
         data.find(
           department =>
-            department.name.toLowerCase() ===
-            overlayData.departmentName.toLowerCase(),
+            department.name.trim().toLowerCase() ===
+            overlayData.departmentName.trim().toLowerCase(),
         ) === undefined
       ) {
         setData([
@@ -354,8 +306,8 @@ const DepartmentsScreen = ({navigation}) => {
     if (overlayData.isValidDepartmentName) {
       let temp = data.filter(department => {
         if (
-          !department.name.toLowerCase() ===
-          overlayData.departmentName.toLowerCase()
+          !department.name.trim().toLowerCase() ===
+          overlayData.departmentName.trim().toLowerCase()
         ) {
           return department;
         }
@@ -377,8 +329,8 @@ const DepartmentsScreen = ({navigation}) => {
     if (overlayData.isValidDepartmentName) {
       let temp = data.find(
         department =>
-          department.name.toLowerCase() ===
-          overlayData.departmentName.toLowerCase(),
+          department.name.trim().toLowerCase() ===
+          overlayData.departmentName.trim().toLowerCase(),
       );
       if (temp !== undefined) {
         setOverlayData({isVisible: false});
@@ -405,7 +357,7 @@ const DepartmentsScreen = ({navigation}) => {
           ref={refs.searchRef}
         />
         {data.map(department => (
-          <Department
+          <DepartmentAccordionItem
             key={department.id}
             department={department}
             onLayout={event => {
@@ -444,6 +396,7 @@ const DepartmentsScreen = ({navigation}) => {
 
 const UpdateModalScreen = ({navigation, route}) => {
   const {department} = route.params;
+
   return (
     <SafeAreaView style={localStyles.baseContainer}>
       <StatusBar
@@ -451,11 +404,17 @@ const UpdateModalScreen = ({navigation, route}) => {
         barStyle="dark-content"
       />
       <ScrollView styles={localStyles.mainContainer}>
-        {department.members.map(member => (
-          <Member
+        {department.members.map((member, index, array) => (
+          <MemberListItem
             key={member.id}
-            department={member.name}
-            chevronProps={{name: 'x', type: 'octicon', size: 30}}
+            name={member.name}
+            chevronProps={{
+              name: 'x',
+              type: 'octicon',
+              size: 30,
+              color: Styles.colors.error,
+              onPress: () => array.splice(index),
+            }}
           />
         ))}
       </ScrollView>
@@ -464,17 +423,21 @@ const UpdateModalScreen = ({navigation, route}) => {
 };
 
 const DepartmentsStack = () => (
-  <Stack.Navigator mode="modal">
+  <Stack.Navigator mode="modal" headerMode="screen">
     <Stack.Screen
-      name="Main"
-      component={DepartmentsScreen}
-      options={{headerShown: false}}
+      name="Departments"
+      component={OrganizationsScreen}
+      options={({navigation}) => ({
+        headerLeft: () => (
+          <HeaderBackButton
+            onPress={() => {
+              navigation.navigate('Home');
+            }}
+          />
+        ),
+      })}
     />
-    <Stack.Screen
-      name="Update Department"
-      component={UpdateModalScreen}
-      options={{headerShown: false}}
-    />
+    <Stack.Screen name="Update Department" component={UpdateModalScreen} />
   </Stack.Navigator>
 );
 
