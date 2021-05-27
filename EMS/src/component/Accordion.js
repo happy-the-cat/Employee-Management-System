@@ -10,6 +10,10 @@ const Accordion = ({
   items,
   topDivider,
   bottomDivider,
+  icon,
+  expandIcon,
+  noRotation,
+  onPress,
   onLayout,
 }) => {
   const [expanded, setExpanded] = useState(false);
@@ -22,7 +26,11 @@ const Accordion = ({
       isExpanded={expanded}
       onPress={() => {
         setExpanded(!expanded);
+        return onPress;
       }}
+      icon={icon}
+      expandIcon={expandIcon}
+      noRotation={noRotation}
       onLayout={onLayout}>
       {items}
     </ListItem.Accordion>

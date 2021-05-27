@@ -1,15 +1,19 @@
 import 'react-native-gesture-handler';
 import React, {useRef, useCallback, useState} from 'react';
-import {SafeAreaView, ScrollView, View, Text, StyleSheet} from 'react-native';
-
+import {
+  SafeAreaView,
+  ScrollView,
+  View,
+  Text,
+  StyleSheet,
+  Button,
+} from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Avatar, Divider} from 'react-native-elements';
+
 import {ReanimatedArcBase} from '@callstack/reanimated-arc';
 import Reanimated, {Easing} from 'react-native-reanimated';
-
 import {FocusAwareStatusBar} from '../component/FocusAwareStatusBar';
-
-import * as Styles from '../Styles';
 
 const Education = education => {
   return (
@@ -89,9 +93,109 @@ const WorkExperience = workExperience => {
   );
 };
 
+const ProfileScreen = () => {
+  return (
+    <SafeAreaView
+      style={{
+        backgroundColor: 'white',
+      }}>
+      <FocusAwareStatusBar backgroundColor={'white'} barStyle="dark-content" />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={{marginHorizontal: 16}}>
+          <View>
+            <View style={{alignItems: 'center', marginVertical: 8}}>
+              <Avatar
+                rounded
+                overlayContainerStyle={{backgroundColor: 'green'}}
+                size={'large'}
+                title={'MS'}
+              />
+            </View>
+            <View style={{alignItems: 'center', marginVertical: 8}}>
+              <Text style={styles.largeTitle}>Mia Smith</Text>
+              <Text style={[styles.body]}>Manager</Text>
+              <Text style={[styles.body]}>
+                Information Technology Department
+              </Text>
+            </View>
+          </View>
+          <Divider style={{marginVertical: 8, backgroundColor: 'dimgray'}} />
+          <View style={{marginVertical: 8}}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Ionicons
+                name={'color-palette-outline'}
+                size={24}
+                color={'indigo'}
+                style={{marginRight: 8}}
+              />
+              <Text style={styles.title3}>Skills</Text>
+            </View>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignSelf: 'center',
+              marginVertical: 8,
+            }}>
+            <Progress title={'Java'} style={{marginRight: 8}} />
+            <Progress title={'C++'} style={{marginRight: 8}} />
+            <Progress title={'Python'} />
+          </View>
+          <View style={{marginVertical: 8}}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Ionicons
+                name={'school-outline'}
+                size={24}
+                color={'indigo'}
+                style={{marginRight: 8}}
+              />
+              <Text style={styles.title3}>Education</Text>
+            </View>
+          </View>
+          <Education
+            school={'De La Salle University'}
+            degree={'Bachelor of Science in Computer Engineering'}
+            startYear={2019}
+            endYear={2023}
+          />
+          <Education
+            school={'Mapúa University'}
+            degree={'Science, Technology, Engineering and Mathematics Strand'}
+            startYear={2017}
+            endYear={2019}
+          />
+          <View style={{marginVertical: 8}}>
+            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+              <Ionicons
+                name={'briefcase-outline'}
+                size={24}
+                color={'indigo'}
+                style={{marginRight: 8}}
+              />
+              <Text style={styles.title3}>Work Experience</Text>
+            </View>
+          </View>
+          <WorkExperience
+            title={'Full-Stack Web Developer'}
+            company={'Sony Interactive Entertainment'}
+            startYear={2023}
+            endYear={2025}
+          />
+          <WorkExperience
+            title={'Software Engineering Intern'}
+            company={'Microsoft'}
+            startYear={2023}
+            endYear={2023}
+          />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
+
 const Progress = skill => {
-  const [arcText, setArcText] = useState('0%');
   const arcAngle = useRef(new Reanimated.Value(Math.random() * 240));
+  const [text, setText] = useState('0%');
   const randomizeProgress = useCallback(() => {
     Reanimated.timing(arcAngle.current, {
       toValue: Math.random() * 240,
@@ -102,10 +206,10 @@ const Progress = skill => {
 
   return (
     <View style={{alignItems: 'center', marginHorizontal: 8}}>
-      <View style={[styles.arcContainer]}>
+      <View style={[styles.container]}>
         <Reanimated.Code
           exec={Reanimated.call([arcAngle.current], ([value]) => {
-            setArcText(`${Math.round((value / 240) * 100)}%`);
+            setText(`${Math.round((value / 240) * 100)}%`);
           })}
         />
         <ReanimatedArcBase
@@ -126,7 +230,7 @@ const Progress = skill => {
           rotation={240}
           style={styles.absolute}
         />
-        <Text style={[styles.body, {fontSize: 13}]}>{arcText}</Text>
+        <Text style={[styles.body, {fontSize: 13}]}>{text}</Text>
       </View>
       {/*<Button title="Randomize progress" onPress={randomizeProgress} />*/}
       <Text style={[styles.body, {alignContent: 'center'}]}>{skill.title}</Text>
@@ -134,128 +238,22 @@ const Progress = skill => {
   );
 };
 
-const ProfileScreen = () => {
-  return (
-    <SafeAreaView style={{backgroundColor: Styles.colors.light}}>
-      <FocusAwareStatusBar
-        backgroundColor={Styles.colors.light}
-        barStyle="dark-content"
-      />
-      <ScrollView
-        contentContainerStyle={{paddingBottom: Styles.whitespaces.margin}}
-        showsVerticalScrollIndicator={false}
-        style={styles.baseContainer}>
-        <View>
-          <View style={{alignItems: 'center', marginVertical: 8}}>
-            <Avatar
-              rounded
-              overlayContainerStyle={{backgroundColor: 'green'}}
-              size={'large'}
-              title={'MS'}
-            />
-          </View>
-          <View style={{alignItems: 'center', marginVertical: 8}}>
-            <Text style={styles.largeTitle}>Mia Smith</Text>
-            <Text style={[styles.body]}>Executive Manager</Text>
-            <Text style={[styles.body]}>Information Technology Department</Text>
-          </View>
-        </View>
-        <Divider style={{marginVertical: 8, backgroundColor: 'dimgray'}} />
-        <View style={{marginVertical: 8}}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Ionicons
-              name={'color-palette-outline'}
-              size={24}
-              color={'indigo'}
-              style={{marginRight: 8}}
-            />
-            <Text style={styles.title3}>Skills</Text>
-          </View>
-        </View>
-        <View
-          style={{
-            flexDirection: 'row',
-            alignSelf: 'center',
-            marginVertical: 8,
-            height: 70,
-          }}>
-          <Progress title={'Java'} style={{marginRight: 8}} />
-          <Progress title={'C++'} style={{marginRight: 8}} />
-          <Progress title={'Python'} />
-        </View>
-        <View style={{marginVertical: 8}}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Ionicons
-              name={'school-outline'}
-              size={24}
-              color={'indigo'}
-              style={{marginRight: 8}}
-            />
-            <Text style={styles.title3}>Education</Text>
-          </View>
-        </View>
-        <Education
-          school={'De La Salle University'}
-          degree={'Bachelor of Science in Computer Engineering'}
-          startYear={2019}
-          endYear={2023}
-        />
-        <Education
-          school={'Mapúa University'}
-          degree={'Science, Technology, Engineering and Mathematics Strand'}
-          startYear={2017}
-          endYear={2019}
-        />
-        <View style={{marginVertical: 8}}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Ionicons
-              name={'briefcase-outline'}
-              size={24}
-              color={'indigo'}
-              style={{marginRight: 8}}
-            />
-            <Text style={styles.title3}>Work Experience</Text>
-          </View>
-        </View>
-        <WorkExperience
-          title={'Full-Stack Web Developer'}
-          company={'Sony Interactive Entertainment'}
-          startYear={2023}
-          endYear={2025}
-        />
-        <WorkExperience
-          title={'Software Engineering Intern'}
-          company={'Microsoft'}
-          startYear={2023}
-          endYear={2023}
-        />
-      </ScrollView>
-    </SafeAreaView>
-  );
-};
-
 const styles = StyleSheet.create({
-  baseContainer: {
-    marginHorizontal: Styles.whitespaces.inner,
-  },
   largeTitle: {
-    // fontFamily: 'Helvetica',
-    // fontSize: 34,
-    // fontWeight: 'bold',
-    ...Styles.texts.title,
+    fontFamily: 'Helvetica',
+    fontSize: 34,
+    fontWeight: 'bold',
   },
   title3: {
-    // fontFamily: 'Helvetica',
-    // fontSize: 20,
-    // fontWeight: 'bold',
-    ...Styles.texts.secondaryCaps,
+    fontFamily: 'Helvetica',
+    fontSize: 20,
+    fontWeight: 'bold',
   },
   body: {
-    // fontFamily: 'Helvetica',
-    // fontSize: 17,
-    ...Styles.texts.default,
+    fontFamily: 'Helvetica',
+    fontSize: 17,
   },
-  arcContainer: {
+  container: {
     position: 'relative',
     justifyContent: 'center',
     alignItems: 'center',
@@ -264,6 +262,10 @@ const styles = StyleSheet.create({
   },
   absolute: {
     position: 'absolute',
+  },
+  text: {
+    // transform: [{translateY: -10}],
+    fontSize: 17,
   },
 });
 

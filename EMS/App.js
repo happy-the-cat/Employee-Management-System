@@ -1,11 +1,17 @@
 import React from 'react';
-import {View, StyleSheet, ActivityIndicator} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  ScrollView,
+  Button,
+} from 'react-native';
 
 import 'react-native-gesture-handler';
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
 import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import EncryptedStorage from 'react-native-encrypted-storage';
@@ -22,8 +28,69 @@ import ProfileScreen from './src/screens/ProfileScreen';
 const Stack = createStackNavigator();
 const Tab = createMaterialBottomTabNavigator();
 
+const OrganizationScreen = () => {
+  return <SafeAreaView />;
+};
+
 const NotificationsScreen = () => {
   return <SafeAreaView />;
+};
+
+const MenuScreen = ({navigation}) => {
+  return (
+    <SafeAreaView>
+      <ScrollView>
+        <Button
+          title={'Profile'}
+          onPress={() => {
+            navigation.navigate('Profile');
+          }}
+        />
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
+
+const MyStack = ({route}) => {
+  return (
+    <Stack.Navigator initialRouteName={'Menu'}>
+      <Stack.Screen
+        name={'Menu'}
+        component={MenuScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={'Profile'}
+        component={ProfileScreen}
+        options={({navigation}) => ({
+          headerStyle: {
+            backgroundColor: 'transparent',
+          },
+          headerLeft: () => (
+            <Ionicons
+              style={{marginLeft: 16}}
+              name={'arrow-back-outline'}
+              color={'green'}
+              size={24}
+              onPress={() => {
+                navigation.navigate('Menu');
+              }}
+            />
+          ),
+          headerBackTitleVisible: false,
+          headerTitle: '',
+          headerRight: () => (
+            <Ionicons
+              style={{marginRight: 16}}
+              name={'pencil-outline'}
+              color={'green'}
+              size={24}
+            />
+          ),
+        })}
+      />
+    </Stack.Navigator>
+  );
 };
 
 const App = () => {
@@ -73,27 +140,17 @@ const App = () => {
 
   const authContext = React.useMemo(
     () => ({
-      signIn: async (userType, userName, password) => {
+      signIn: async foundUser => {
         /*TODO: actual scenario username and password r fetch by some API then
          *  match against some user-pass in the database,
          *  token is also retrieved from database */
-        let userToken;
-        userToken = null;
-        if (userName === 'user' && password === 'pass') {
-          try {
-            userToken = 'dummy-tokenn';
-            await EncryptedStorage.setItem(
-              'userSession',
-              JSON.stringify({
-                userToken: userToken,
-                userType: userType,
-              }),
-            );
-          } catch (e) {
-            console.log(e);
-          }
+        const userToken = String(foundUser[0].userToken);
+        const userName = foundUser[0].username;
+        try {
+          await EncryptedStorage.setItem('userToken', userToken);
+        } catch (e) {
+          console.log(e);
         }
-        console.log('user token: ', userToken);
         dispatch({type: 'LOGIN', id: userName, token: userToken});
       },
       signOut: async () => {
@@ -104,10 +161,32 @@ const App = () => {
         }
         dispatch({type: 'LOGOUT'});
       },
-      signUp: () => {
-        // setUserToken('fdfg');
-        // setIsLoading(false);
-      },
+      signUp: () => {},
+      // signUp: async (userName, password) => {
+      //   /*TODO: actual scenario username and password r fetch by some API then
+      //    *  match against some user-pass in the database,
+      //    *  token is also retrieved from database */
+      //   let userToken;
+      //   userToken = null;
+      //   try {
+      //     userToken = 'dummy-tokenn';
+      //     await EncryptedStorage.setItem(
+      //       'userSession',
+      //       JSON.stringify({
+      //         userToken: userToken,
+      //         password: password,
+      //       }),
+      //     );
+      //   } catch (e) {
+      //     console.log(e);
+      //   }
+      //   console.log('user token: ', userToken);
+      //   dispatch({
+      //     type: 'REGISTER',
+      //     id: userName,
+      //     token: userToken,
+      //   });
+      // },
     }),
     [],
   );
@@ -118,12 +197,15 @@ const App = () => {
   //     let userToken = null;
   //     try {
   //       const session = await EncryptedStorage.getItem('userSession');
-  //       userToken = session.getItem('userToken');
+  //       if (session) {
+  //         const sessionData = JSON.parse(session);
+  //         userToken = sessionData.userToken;
+  //       }
   //     } catch (e) {
   //       console.log(e);
   //     }
   //     console.log('user token: ', userToken);
-  //     dispatch({type: 'SIGNUP', token: userToken});
+  //     dispatch({type: 'RETRIEVE_TOKEN', token: userToken});
   //   }, 1000);
   // }, []);
   //
@@ -137,7 +219,10 @@ const App = () => {
 
   const HomeStack = () => {
     return (
-      <Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={({navigation, route}) => ({
+          ...TransitionPresets.ModalSlideFromBottomIOS,
+        })}>
         <Stack.Screen
           name="Home"
           component={HomeScreen}
@@ -157,36 +242,6 @@ const App = () => {
             options={{headerShown: false}}
           />
         )}
-        <Stack.Screen
-          name={'Profile'}
-          component={ProfileScreen}
-          options={({navigation}) => ({
-            headerStyle: {
-              backgroundColor: 'white',
-            },
-            headerLeft: () => (
-              <Ionicons
-                style={{marginLeft: 16}}
-                name={'arrow-back-outline'}
-                color={'green'}
-                size={24}
-                onPress={() => {
-                  navigation.navigate('Home');
-                }}
-              />
-            ),
-            headerBackTitleVisible: false,
-            headerTitle: '',
-            headerRight: () => (
-              <Ionicons
-                style={{marginRight: 16}}
-                name={'pencil-outline'}
-                color={'green'}
-                size={24}
-              />
-            ),
-          })}
-        />
       </Stack.Navigator>
     );
   };
@@ -203,12 +258,26 @@ const App = () => {
                 options={{
                   tabBarIcon: ({focused, color}) => (
                     <Ionicons
-                      name={focused ? 'apps' : 'apps-outline'}
+                      name={focused ? 'home' : 'home-outline'}
                       color={color}
                       size={24}
                     />
                   ),
                   tabBarColor: 'darkblue',
+                }}
+              />
+              <Tab.Screen
+                name={'Organization'}
+                component={OrganizationScreen}
+                options={{
+                  tabBarIcon: ({focused, color}) => (
+                    <Ionicons
+                      name={focused ? 'business' : 'business-outline'}
+                      color={color}
+                      size={24}
+                    />
+                  ),
+                  tabBarColor: 'darkorange',
                 }}
               />
               <Tab.Screen
@@ -240,12 +309,12 @@ const App = () => {
                 }}
               />
               <Tab.Screen
-                name={'Attendance'}
-                component={AttendanceScreen}
+                name={'Menu'}
+                component={MyStack}
                 options={{
                   tabBarIcon: ({focused, color}) => (
                     <Ionicons
-                      name={focused ? 'alarm' : 'alarm-outline'}
+                      name={focused ? 'apps' : 'apps-outline'}
                       color={color}
                       size={24}
                     />

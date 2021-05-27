@@ -79,6 +79,13 @@ const containers = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'flex-start',
   },
+  overlap: {
+    position: 'absolute',
+    zIndex: -1,
+  },
+  flip: {
+    transform: [{scaleX: -1}],
+  },
 });
 
 // Functions

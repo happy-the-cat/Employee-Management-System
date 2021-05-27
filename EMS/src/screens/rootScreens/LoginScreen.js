@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Text, StatusBar} from 'react-native';
+import {View, StyleSheet, Text, StatusBar, Alert} from 'react-native';
 
 import {SafeAreaView} from 'react-native-safe-area-context';
 
@@ -7,6 +7,7 @@ import {AuthContext} from '../../component/Context';
 import {ButtonPrimary, ButtonTextOnly} from '../../component/Button';
 import {InputField} from '../../component/InputField';
 
+import {Users} from '../../../model/users';
 import * as Styles from '../../Styles';
 
 import LoginImg from '../../../assets/images/login.svg';
@@ -15,9 +16,9 @@ const LoginScreen = ({navigation, route}) => {
   const [data, setData] = useState({
     username: '',
     password: '',
-    isValidUsername: true,
-    isValidPassword: true,
-    secureTextEntry: true,
+    isValidUsername: false,
+    isValidPassword: false,
+    secureTextEntry: false,
   });
   const {userType} = route.params;
   const {signIn} = React.useContext(AuthContext);
@@ -56,7 +57,16 @@ const LoginScreen = ({navigation, route}) => {
   const handleLogin = (username, password) => {
     if (data.isValidUsername === true && data.isValidPassword === true) {
       /*TODO: add handler function for pressing login button*/
-      signIn(userType, username, password);
+      const foundUser = Users.filter(item => {
+        return username === item.username && password === item.password;
+      });
+      if (data.username.length === 0 || data.password.length === 0) {
+        Alert.alert('Login Failed :(', 'Username or password is incorrect.');
+      } else {
+        signIn(foundUser);
+      }
+    } else {
+      Alert.alert('Invalid Input', 'Username and password must not be empty.');
     }
   };
 

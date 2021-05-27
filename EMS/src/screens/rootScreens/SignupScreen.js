@@ -19,12 +19,12 @@ const SignupScreen = ({navigation, route}) => {
     firstName: '',
     lastName: '',
     emailAddress: '',
-    isValidFirstName: true,
-    isValidLastName: true,
-    isValidUsername: true,
-    isValidPassword: true,
-    isPasswordMatch: true,
-    isValidEmail: true,
+    isValidFirstName: false,
+    isValidLastName: false,
+    isValidUsername: false,
+    isValidPassword: false,
+    isPasswordMatch: false,
+    isValidEmail: false,
   });
   const [birthday, setBirthday] = useState(new Date());
   const [gender, setGender] = useState('M');
@@ -144,9 +144,6 @@ const SignupScreen = ({navigation, route}) => {
       data.isPasswordMatch === true
     ) {
       /*TODO: add handler function for pressing signup button*/
-      this.props.navigation.navigate('Home', {
-        userType: 'admin or nomral user',
-      });
       signUp(); // Call to AuthContext's signUp (from App.js authentication)
     }
   };
@@ -157,7 +154,9 @@ const SignupScreen = ({navigation, route}) => {
         backgroundColor={Styles.colors.light}
         barStyle="dark-content"
       />
-      <ScrollView style={Styles.containers.pad}>
+      <ScrollView
+        style={Styles.containers.pad}
+        keyboardShouldPersistTaps="handled">
         <Text style={Styles.texts.title}> Sign Up </Text>
         <View style={localStyles.horizontalContainer}>
           <InputField
