@@ -29,12 +29,28 @@ const ButtonSecondary = ({onPress, title, containerStyle, textStyle}) => (
   </View>
 );
 
-const ButtonTextOnly = ({title, onPress, containerStyle, titleStyle}) => (
+const ButtonTextOnly = ({
+  title,
+  onPress,
+  containerStyle,
+  titleStyle,
+  textColor,
+}) => (
   <Button
     onPress={onPress}
     containerStyle={[containerStyle, textOnlyStyles.button]}
     title={title}
-    titleStyle={[titleStyle, textOnlyStyles.text]}
+    titleStyle={[
+      titleStyle,
+      textOnlyStyles.text,
+      [
+        {
+          ...(textColor
+            ? {color: textColor}
+            : {color: Styles.colors.onBackground}),
+        },
+      ],
+    ]}
     type="clear"
   />
 );
@@ -83,7 +99,6 @@ const textOnlyStyles = StyleSheet.create({
   },
   text: {
     ...Styles.texts.secondaryEmphasis,
-    color: Styles.colors.onBackground,
     alignSelf: 'center',
   },
 });

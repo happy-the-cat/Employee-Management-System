@@ -1,17 +1,18 @@
 import React, {useState} from 'react';
 import {
-  View,
+  Button,
   Text,
   StyleSheet,
   StatusBar,
   ScrollView,
   Alert,
+  BackHandler,
 } from 'react-native';
-
+import {useFocusEffect} from '@react-navigation/native';
+import {createStackNavigator, HeaderBackButton} from '@react-navigation/stack';
 import 'react-native-get-random-values';
 import {nanoid} from 'nanoid';
 
-import {createStackNavigator, HeaderBackButton} from '@react-navigation/stack';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Overlay, Divider, ListItem, Icon} from 'react-native-elements';
 import {FloatingAction} from 'react-native-floating-action';
@@ -22,7 +23,7 @@ import {
   MemberListItem,
 } from '../../component/DepartmentsLists';
 import {SearchDropDown, SearchField} from '../../component/SearchField';
-import {ButtonPrimary} from '../../component/Button';
+import {ButtonPrimary, ButtonTextOnly} from '../../component/Button';
 import {InputField} from '../../component/InputField';
 
 import * as Styles from '../../Styles';
@@ -37,7 +38,7 @@ const DepartmentsScreen = ({navigation, route}) => {
     {
       id: nanoid(),
       name: 'Marketing',
-      head: 'Macey Osaka',
+      head: {id: nanoid(), name: 'Macey Osaka'},
       members: [
         {id: nanoid(), name: 'Amy Farha'},
         {id: nanoid(), name: 'Chris Jackson'},
@@ -47,7 +48,7 @@ const DepartmentsScreen = ({navigation, route}) => {
     {
       id: nanoid(),
       name: 'Information Technology',
-      head: 'Atsuma Yami',
+      head: {id: nanoid(), name: 'Atsuma Yami'},
       members: [
         {id: nanoid(), name: 'Armanda Martin'},
         {id: nanoid(), name: 'Christy Thomas'},
@@ -57,7 +58,7 @@ const DepartmentsScreen = ({navigation, route}) => {
     {
       id: nanoid(),
       name: 'Human Resources',
-      head: 'Will Taylor',
+      head: {id: nanoid(), name: 'Will Taylor'},
       members: [
         {id: nanoid(), name: 'Jessica Ang'},
         {id: nanoid(), name: 'Kris Grey'},
@@ -142,19 +143,21 @@ const DepartmentsScreen = ({navigation, route}) => {
   });
   const [scrollRef, setScrollRef] = useState(null);
 
-  React.useEffect(() => {
-    if (route.params?.department) {
-      const temp = data.filter(department => {
-        if (
-          department.name.trim().toLowerCase() ===
-          overlayData.departmentName.trim().toLowerCase()
-        ) {
-          return department;
-        }
-        setData(temp);
-      });
-    }
-  }, [data, overlayData.departmentName, route.params?.department]);
+  // React.useEffect(() => {
+  //   if (route.params?.department) {
+  //     setData(prevState => {
+  //       const temp = prevState.filter(department => {
+  //         if (department.id === route.params.department.id) {
+  //           return route.params.department;
+  //         } else {
+  //           return department;
+  //         }
+  //       });
+  //       console.log(temp.length);
+  //       return {temp};
+  //     });
+  //   }
+  // }, [route.params?.department]);
 
   const handleSearch = input => {
     // based on https://swairaq.medium.com/react-native-dropdown-searchbar-adc4532f7535
@@ -209,7 +212,7 @@ const DepartmentsScreen = ({navigation, route}) => {
     }
   };
 
-  const handleDepartmentNameChange = value => {
+  const handleDepartmentNameInput = value => {
     if (value.trim().length >= 2) {
       setOverlayData({
         ...overlayData,
@@ -224,7 +227,7 @@ const DepartmentsScreen = ({navigation, route}) => {
     }
   };
 
-  const handleDepartmentHeadChange = value => {
+  const handleDepartmentHeadInput = value => {
     /*TODO: check if head's name exists (if they are an employee of the company)*/
     if (value.trim().length >= 2) {
       setOverlayData({
@@ -240,7 +243,7 @@ const DepartmentsScreen = ({navigation, route}) => {
     }
   };
 
-  const handleNewDepartmentNameChange = value => {
+  const handleNewDepartmentNameInput = value => {
     if (value.trim().length >= 2) {
       setOverlayData({
         ...overlayData,
@@ -277,7 +280,7 @@ const DepartmentsScreen = ({navigation, route}) => {
                 autoFocus
                 autocapitalize="words"
                 placeholder={'Department Name'}
-                onChangeText={value => handleDepartmentNameChange(value)}
+                onChangeText={value => handleDepartmentNameInput(value)}
                 errorMessage={
                   !overlayData.isValidDepartmentName ? 'Invalid Input' : ''
                 }
@@ -286,7 +289,7 @@ const DepartmentsScreen = ({navigation, route}) => {
               <InputField
                 autocapitalize="words"
                 placeholder={'Department Head'}
-                onChangeText={value => handleDepartmentHeadChange(value)}
+                onChangeText={value => handleDepartmentHeadInput(value)}
                 errorMessage={
                   !overlayData.isValidDepartmentHead
                     ? 'Inputted name is not part of the company.'
@@ -312,7 +315,7 @@ const DepartmentsScreen = ({navigation, route}) => {
                 autoFocus
                 autocapitalize="words"
                 placeholder={'Department Name'}
-                onChangeText={value => handleDepartmentNameChange(value)}
+                onChangeText={value => handleDepartmentNameInput(value)}
                 errorMessage={
                   !overlayData.isValidDepartmentName ? 'Invalid Input' : ''
                 }
@@ -336,7 +339,7 @@ const DepartmentsScreen = ({navigation, route}) => {
                 autoFocus
                 autocapitalize="words"
                 placeholder={'Department Name'}
-                onChangeText={value => handleDepartmentNameChange(value)}
+                onChangeText={value => handleDepartmentNameInput(value)}
                 errorMessage={
                   !overlayData.isValidDepartmentName ? 'Invalid Input' : ''
                 }
@@ -345,7 +348,7 @@ const DepartmentsScreen = ({navigation, route}) => {
               <InputField
                 autocapitalize="words"
                 placeholder={'New Department Name'}
-                onChangeText={value => handleNewDepartmentNameChange(value)}
+                onChangeText={value => handleNewDepartmentNameInput(value)}
                 errorMessage={
                   !overlayData.isValidNewDepartmentName ? 'Invalid Input' : ''
                 }
@@ -369,7 +372,7 @@ const DepartmentsScreen = ({navigation, route}) => {
                 autoFocus
                 autocapitalize="words"
                 placeholder={'Department Name'}
-                onChangeText={value => handleDepartmentNameChange(value)}
+                onChangeText={value => handleDepartmentNameInput(value)}
                 errorMessage={
                   !overlayData.isValidDepartmentName ? 'Invalid Input' : ''
                 }
@@ -404,7 +407,7 @@ const DepartmentsScreen = ({navigation, route}) => {
           {
             id: nanoid(),
             name: overlayData.departmentName,
-            head: overlayData.departmentHead,
+            head: {id: nanoid(), name: overlayData.departmentHead},
             members: [],
           },
         ]);
@@ -503,17 +506,19 @@ const DepartmentsScreen = ({navigation, route}) => {
           onChangeText={value => handleSearch(value)}
           value={searchData.input}
         />
-        {data.map(department => (
-          <DepartmentAccordionItem
-            key={department.id}
-            department={department}
-            onLayout={event => {
-              const layout = event.nativeEvent.layout;
-              dataCords[department.id] = layout.y;
-              setDataCords(dataCords);
-            }}
-          />
-        ))}
+        {data !== undefined
+          ? data.map(department => (
+              <DepartmentAccordionItem
+                key={department.id}
+                department={department}
+                onLayout={event => {
+                  const layout = event.nativeEvent.layout;
+                  dataCords[department.id] = layout.y;
+                  setDataCords(dataCords);
+                }}
+              />
+            ))
+          : null}
         {searchData.isSearching && (
           <SearchDropDown
             onPressItem={scrollToIndex => {
@@ -553,31 +558,87 @@ const UpdateModalScreen = ({navigation, route}) => {
     memberName: '',
     headName: '',
     isHeadEditable: false,
+    hasUnsavedChanges: false,
   });
   let inputMemberRef;
   let inputHeadRef;
 
-  navigation.setOptions({
-    headerLeft: () => (
-      <HeaderBackButton
-        onPress={() => {
-          navigation.navigate('Departments', {department: department});
-        }}
-      />
-    ),
-  });
+  const hasUnsavedChanges = Boolean(modalData.hasUnsavedChanges);
 
+  // Attemp1: Using BackHandler, alert user of unsaved changes using custom back button
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     let onBackPress = false;
+  //     if (hasUnsavedChanges) {
+  //       Alert.alert(
+  //         'Discard changes?',
+  //         'You have unsaved changes. Are you sure to discard them and go back to previous screen?',
+  //         [
+  //           {
+  //             text: "Don't leave",
+  //             style: 'cancel',
+  //             onPress: () => (onBackPress = !onBackPress),
+  //           },
+  //           {
+  //             text: 'Discard',
+  //             style: 'destructive',
+  //             onPress: null,
+  //           },
+  //         ],
+  //       );
+  //     }
+  //     BackHandler.addEventListener('hardwareBackPress', onBackPress);
+  //     return () =>
+  //       BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+  //   }, [hasUnsavedChanges]),
+  // );
+
+  // Attemp2: On going back (popping a screen of nav), alert user of unsaved changes
+  // React.useEffect(
+  //   () =>
+  //     navigation.addListener('beforeRemove', e => {
+  //       if (!hasUnsavedChanges) {
+  //         return;
+  //       }
+  //       // Prevent default behavior of leaving the screen
+  //       e.preventDefault();
+  //       Alert.alert(
+  //         'Discard changes?',
+  //         'You have unsaved changes. Are you sure to discard them and go back to previous screen?',
+  //         [
+  //           {text: "Don't leave", style: 'cancel', onPress: () => {}},
+  //           {
+  //             text: 'Discard',
+  //             style: 'destructive',
+  //             onPress: () => navigation.dispatch(e.data.action),
+  //           },
+  //         ],
+  //       );
+  //     }),
+  //   [navigation, hasUnsavedChanges],
+  // );
+
+  const getDepartment = department;
+
+  // Save button on right for passing param
   // React.useLayoutEffect(() => {
   //   navigation.setOptions({
-  //     headerLeft: () => (
-  //       <HeaderBackButton
+  //     headerRight: () => (
+  //       <ButtonTextOnly
   //         onPress={() => {
-  //           navigation.navigate('Departments', {department: department});
+  //           navigation.navigate({
+  //             name: 'Departments',
+  //             params: {department: getDepartment},
+  //             merge: true,
+  //           });
   //         }}
+  //         title="Save"
+  //         titleStyle={{paddingHorizontal: Styles.whitespaces.inner}}
+  //         textColor={Styles.colors.primaryLight}
   //       />
   //     ),
   //   });
-  // }, [navigation, department]);
+  // }, [getDepartment, navigation]);
 
   const onChangeHead = () => {
     if (
@@ -593,9 +654,19 @@ const UpdateModalScreen = ({navigation, route}) => {
         }
       });
       if (temp.length !== department.members.length) {
-        setDepartment({...department, members: temp, head: modalData.headName});
+        temp.push({id: department.head.id, name: department.head.name});
+        setDepartment({
+          ...department,
+          head: {id: nanoid(), name: modalData.headName},
+          members: temp,
+        });
+        setModalData({
+          ...modalData,
+          isHeadEditable: false,
+          headName: '',
+          hasUnsavedChanges: true,
+        });
         inputHeadRef.clear();
-        setModalData({...modalData, isHeadEditable: false});
       } else {
         Alert.alert(
           'Error',
@@ -631,7 +702,7 @@ const UpdateModalScreen = ({navigation, route}) => {
             },
           ],
         });
-        setModalData({...modalData, memberName: ''});
+        setModalData({...modalData, memberName: '', hasUnsavedChanges: true});
         inputMemberRef.clear();
       } else {
         Alert.alert(
@@ -658,6 +729,7 @@ const UpdateModalScreen = ({navigation, route}) => {
               }
             });
             setDepartment({...department, members: temp});
+            setModalData({...modalData, hasUnsavedChanges: true});
           },
           style: 'default',
         },
@@ -701,7 +773,7 @@ const UpdateModalScreen = ({navigation, route}) => {
         />
         <MemberListItem
           type="head"
-          name={department.head}
+          name={department.head.name}
           containerStyle={localStyles.modalListContainer}
           chevronProps={
             modalData.isHeadEditable
@@ -732,6 +804,7 @@ const UpdateModalScreen = ({navigation, route}) => {
             ref={input => {
               inputHeadRef = input;
             }}
+            autoFocus
             autocapitalize="words"
             placeholder="Enter department head's name."
             inputContainerStyle={localStyles.modalInputContainer}
@@ -766,6 +839,13 @@ const UpdateModalScreen = ({navigation, route}) => {
       </ScrollView>
     </SafeAreaView>
   );
+};
+
+UpdateModalScreen.navigationOptions = navigationData => {
+  const handler = navigationData.navigation.route.params('handler');
+  return {
+    headerLeft: <HeaderBackButton onPress={handler} />,
+  };
 };
 
 const DepartmentsStack = () => (

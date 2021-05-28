@@ -40,10 +40,10 @@ const DepartmentAccordionItem = ({department, onLayout}) => (
     }
     items={
       <>
-        {department.head.length > 0 ? (
+        {department.head.name.length > 0 ? (
           <MemberListItem
             type="head"
-            name={department.head}
+            name={department.head.name}
             onPress={null /*TODO: add some action for clicking dept. head*/}
           />
         ) : null}
