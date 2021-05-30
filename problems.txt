@@ -1,8 +1,0 @@
-Major:
- - Each child in a list should have a unique "key" prop. @IconCard in HomePageTest & @Accordion in DepartmentsScreen_Employee
- - Solution to ^: Install NanoID package, edit DepartmentScreens & HomeScreen for that.
-
-Minor:
- - <WARNING> Require cycle: node_modules\react-native-elements\dist\list\ListItem.js -> node_modules\react-native-elements\dist\list\ListItemAccordion.js -> node_modules\react-native-elements\dist\list\ListItem.js
-Require cycles are allowed, but can result in uninitialized values. Consider refactoring to remove the need for a cycle.
- - Make Status bar BGcolor transparent
