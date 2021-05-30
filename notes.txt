@@ -23,6 +23,9 @@ Dependencies Packages:
 - React Native Encrypted Storage
 - react-native-get-random-values & NanoID (no need install)
 - React Native Floating Action
+- react-native-sectionlist-contacts
+- react-native-material-ripple
+- Random Color
 
 React Navigation:
 https://reactnavigation.org/docs/getting-started
@@ -70,6 +73,23 @@ https://github.com/santomegonzalo/react-native-floating-action
 	yarn add react-native-floating-action
 npm i react-native-action-button --save
 
+react-native-sectionlist-contacts
+https://github.com/cq0702/react-native-sectionlist-contacts
+	yarn add react-native-sectionlist-contacts
+
+react-native-material-ripple
+https://github.com/n4kz/react-native-material-ripple
+	react-native-material-ripple
+
+Random Color
+https://github.com/davidmerfield/randomColor
+	yarn add randomcolor
+
+
+
+
+
 React Native Restart
 https://github.com/avishayil/react-native-restart
 	yarn add react-native-restart
+

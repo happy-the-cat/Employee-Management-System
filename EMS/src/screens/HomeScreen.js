@@ -18,6 +18,7 @@ import CaseImg from '../../assets/featuresIcons/case.svg';
 import DepartmentsImg from '../../assets/featuresIcons/departments.svg';
 import EmployeesImg from '../../assets/featuresIcons/employees.svg';
 import SubscriptionImg from '../../assets/featuresIcons/subscription.svg';
+import {ButtonTextOnly} from '../component/Button';
 
 const HomeScreen = ({navigation, route}) => {
   const imgWidth = (Styles.maxWidth - 30 * 4 - 20) / 2;
@@ -63,7 +64,13 @@ const HomeScreen = ({navigation, route}) => {
     {
       title: 'Employees',
       image: <EmployeesImg height={imgHeight} width={imgWidth} />,
-      screen: userType.toLowerCase() === 'hr' ? '' : '',
+      screen:
+        userType.toLowerCase() === 'hr'
+          ? () => navigation.navigate('HRScreens', {screen: 'Employees'})
+          : () =>
+              navigation.navigate('EmployeeScreens', {
+                screen: 'Employees',
+              }),
     },
     {
       title: 'Subscription',
@@ -121,6 +128,9 @@ const HomeScreen = ({navigation, route}) => {
               );
             }
           })}
+        </View>
+        <View>
+          <ButtonTextOnly />
         </View>
       </ScrollView>
     </SafeAreaView>

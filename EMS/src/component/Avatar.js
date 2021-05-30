@@ -5,22 +5,26 @@ import {Avatar} from 'react-native-elements';
 
 import * as Styles from '../Styles';
 
-const RoundAvatar = ({source, onPress, size, containerStyle, title}) => (
-  <Avatar
-    rounded
-    source={source}
-    //icon={{name: 'person', type: 'octicon'}}
-    title={title}
-    size={size !== undefined ? size : 'medium'}
-    containerStyle={[avatarStyles.container, containerStyle]}
-    onPress={onPress}
-  />
-);
-
-const avatarStyles = StyleSheet.create({
-  container: {
-    backgroundColor: Styles.colors.primaryLight,
-  },
-});
+const RoundAvatar = ({source, onPress, size, containerStyle, title, color}) => {
+  const txtColor = color ? Styles.getContrast(color) : Styles.colors.onPrimary;
+  return (
+    <Avatar
+      rounded
+      source={source}
+      title={title}
+      titleStyle={
+        size === 'small' ? {fontSize: 14, color: txtColor} : {color: txtColor}
+      }
+      size={size !== undefined ? size : 'medium'}
+      containerStyle={[
+        color
+          ? {backgroundColor: color}
+          : {backgroundColor: Styles.colors.highlight},
+        containerStyle,
+      ]}
+      onPress={onPress}
+    />
+  );
+};
 
 export {RoundAvatar};

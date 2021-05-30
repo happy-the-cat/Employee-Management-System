@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {StyleSheet} from 'react-native';
 
 import {ListItem} from 'react-native-elements';
+import Ripple from 'react-native-material-ripple';
 
 import * as Styles from '../Styles';
 

@@ -94,7 +94,7 @@ const MyStack = ({route}) => {
 };
 
 const App = () => {
-  const userType = 'hr'; /*TODO: test, remove later*/
+  const userType = 'employee'; /*TODO: test, remove later*/
   const initialLoginState = {
     isLoading: true,
     userName: null,

@@ -37,7 +37,6 @@ const ButtonTextOnly = ({
   textColor,
 }) => (
   <Button
-    onPress={onPress}
     containerStyle={[containerStyle, textOnlyStyles.button]}
     title={title}
     titleStyle={[

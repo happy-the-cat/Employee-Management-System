@@ -1,12 +1,13 @@
 import React from 'react';
 import {StyleSheet, ScrollView, Text, View} from 'react-native';
 
+import Ripple from 'react-native-material-ripple';
 import {ListItem, SearchBar} from 'react-native-elements';
 
 import * as Styles from '../Styles';
 
 const SearchField = React.forwardRef(
-  ({placeholder, onChangeText, value, lightTheme}, ref) => (
+  ({placeholder, onChangeText, value, lightTheme, containerStyle}, ref) => (
     <SearchBar
       ref={ref}
       placeholder={placeholder}
@@ -14,7 +15,7 @@ const SearchField = React.forwardRef(
       value={value}
       platform="default"
       lightTheme={lightTheme}
-      containerStyle={fieldStyles.container}
+      containerStyle={[fieldStyles.container, containerStyle]}
       inputContainerStyle={fieldStyles.inputContainer}
       inputStyle={fieldStyles.inputText}
       placeholderTextColor={Styles.colors.gray}
@@ -22,21 +23,27 @@ const SearchField = React.forwardRef(
   ),
 );
 
-const SearchDropDown = ({onPressItem, content, noResultPrompt}) => (
-  <View style={dropDownStyles.mainContainer}>
+const SearchDropDown = ({
+  onPressItem,
+  content,
+  noResultPrompt,
+  containerStyle,
+}) => (
+  <View style={[dropDownStyles.mainContainer, containerStyle]}>
     {content.length ? (
       content.map(item => (
-        <ListItem
-          key={item.id}
-          onPress={() => onPressItem(item.id)}
-          bottomDivider
-          containerStyle={dropDownStyles.listContainer}>
-          <ListItem.Content>
-            <ListItem.Title style={dropDownStyles.listText}>
-              {item.name}
-            </ListItem.Title>
-          </ListItem.Content>
-        </ListItem>
+        <Ripple onPress={() => onPressItem(item.id)}>
+          <ListItem
+            key={item.id}
+            bottomDivider
+            containerStyle={dropDownStyles.listContainer}>
+            <ListItem.Content>
+              <ListItem.Title style={dropDownStyles.listText}>
+                {item.name}
+              </ListItem.Title>
+            </ListItem.Content>
+          </ListItem>
+        </Ripple>
       ))
     ) : (
       <Text style={dropDownStyles.noResultText}>{noResultPrompt}</Text>

@@ -7,6 +7,7 @@ import {
   ScrollView,
   Alert,
   BackHandler,
+  Keyboard,
 } from 'react-native';
 import {useFocusEffect} from '@react-navigation/native';
 import {createStackNavigator, HeaderBackButton} from '@react-navigation/stack';
@@ -16,7 +17,6 @@ import {nanoid} from 'nanoid';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Overlay, Divider, ListItem, Icon} from 'react-native-elements';
 import {FloatingAction} from 'react-native-floating-action';
-import * as Animatable from 'react-native-animatable';
 
 import {
   DepartmentAccordionItem,
@@ -26,46 +26,16 @@ import {SearchDropDown, SearchField} from '../../component/SearchField';
 import {ButtonPrimary, ButtonTextOnly} from '../../component/Button';
 import {InputField} from '../../component/InputField';
 
+import {Departments} from '../../../model/departments';
 import * as Styles from '../../Styles';
-import {Accordion} from '../../component/Accordion';
-import {overlay} from 'react-native-paper';
 
 const Stack = createStackNavigator();
 
 const DepartmentsScreen = ({navigation, route}) => {
-  const [data, setData] = useState([
+  const [data, setData] = useState(
     /*TODO: retrieve data and IDs from database. This is only a dummy data.*/
-    {
-      id: nanoid(),
-      name: 'Marketing',
-      head: {id: nanoid(), name: 'Macey Osaka'},
-      members: [
-        {id: nanoid(), name: 'Amy Farha'},
-        {id: nanoid(), name: 'Chris Jackson'},
-        {id: nanoid(), name: 'Mia Smith'},
-      ],
-    },
-    {
-      id: nanoid(),
-      name: 'Information Technology',
-      head: {id: nanoid(), name: 'Atsuma Yami'},
-      members: [
-        {id: nanoid(), name: 'Armanda Martin'},
-        {id: nanoid(), name: 'Christy Thomas'},
-        {id: nanoid(), name: 'Melissa Jones'},
-      ],
-    },
-    {
-      id: nanoid(),
-      name: 'Human Resources',
-      head: {id: nanoid(), name: 'Will Taylor'},
-      members: [
-        {id: nanoid(), name: 'Jessica Ang'},
-        {id: nanoid(), name: 'Kris Grey'},
-        {id: nanoid(), name: 'Trish Kia'},
-      ],
-    },
-  ]);
+    Departments,
+  );
   const actions = [
     {
       text: 'Add Department',
@@ -511,6 +481,10 @@ const DepartmentsScreen = ({navigation, route}) => {
               <DepartmentAccordionItem
                 key={department.id}
                 department={department}
+                onPressItem={id => {
+                  /*TODO: add some action for clicking a member*/
+                  console.log('pressed' + id);
+                }}
                 onLayout={event => {
                   const layout = event.nativeEvent.layout;
                   dataCords[department.id] = layout.y;
@@ -523,7 +497,8 @@ const DepartmentsScreen = ({navigation, route}) => {
           <SearchDropDown
             onPressItem={scrollToIndex => {
               handleScrollTo(scrollToIndex);
-              setSearchData({isSearching: false});
+              setSearchData({input: '', isSearching: false, searchList: []});
+              Keyboard.dismiss();
             }}
             content={searchData.searchList}
             noResultPrompt="No department with similar name found."
