@@ -142,29 +142,6 @@ const EmployeesScreen = ({navigation}) => {
     }
   };
 
-  // React.useLayoutEffect(() => {
-  //   navigation.setOptions({
-  //     headerRight: () => (
-  //       <>
-  //         <Icon
-  //           name="person-add"
-  //           type="ionicons"
-  //           size={30}
-  //           color="forestgreen"
-  //           onPress={addEmployee}
-  //         />
-  //         <Icon
-  //           name="person-remove"
-  //           type="ionicons"
-  //           size={30}
-  //           color="red"
-  //           onPress={removeEmployee}
-  //         />
-  //       </>
-  //     ),
-  //   });
-  // }, [addEmployee, navigation, removeEmployee]);
-
   const renderInputOverlay = () => (
     <Overlay
       isVisible={inputData.isVisible}
