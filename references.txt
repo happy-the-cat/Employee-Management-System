@@ -1,0 +1,12 @@
+Email Format Validation:
+https://stackoverflow.com/a/43692170
+
+PickerItems Array Map w/ Keys
+https://stackoverflow.com/a/43016866
+
+Hex to RGB
+https://stackoverflow.com/a/39077686
+
+ScrollToIndex/Key
+https://aboutreact.com/scroll_to_a_specific_item_in_scrollview_list_view/
+

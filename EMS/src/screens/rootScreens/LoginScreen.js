@@ -1,21 +1,27 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Text, StatusBar} from 'react-native';
+import {View, StyleSheet, Text, StatusBar, Alert} from 'react-native';
 
+import {SafeAreaView} from 'react-native-safe-area-context';
+
+import {AuthContext} from '../../component/Context';
 import {ButtonPrimary, ButtonTextOnly} from '../../component/Button';
-import {TextInput} from '../../component/TextInput';
+import {InputField} from '../../component/InputField';
 
+import {Users} from '../../../model/users';
 import * as Styles from '../../Styles';
 
 import LoginImg from '../../../assets/images/login.svg';
 
-const LoginScreen = ({navigation}) => {
+const LoginScreen = ({navigation, route}) => {
   const [data, setData] = useState({
     username: '',
     password: '',
-    isValidUsername: true,
-    isValidPassword: true,
-    secureTextEntry: true,
+    isValidUsername: false,
+    isValidPassword: false,
+    secureTextEntry: false,
   });
+  const {userType} = route.params;
+  const {signIn} = React.useContext(AuthContext);
 
   const handleUsernameChange = value => {
     if (value.trim().length >= 6) {
@@ -48,27 +54,37 @@ const LoginScreen = ({navigation}) => {
     }
   };
 
-  const handleLoginClick = () => {
+  const handleLogin = (username, password) => {
     if (data.isValidUsername === true && data.isValidPassword === true) {
       /*TODO: add handler function for pressing login button*/
+      const foundUser = Users.filter(item => {
+        return username === item.username && password === item.password;
+      });
+      if (data.username.length === 0 || data.password.length === 0) {
+        Alert.alert('Login Failed :(', 'Username or password is incorrect.');
+      } else {
+        signIn(foundUser);
+      }
+    } else {
+      Alert.alert('Invalid Input', 'Username and password must not be empty.');
     }
   };
 
   return (
-    <View style={localStyles.container}>
+    <SafeAreaView style={localStyles.baseContainer}>
       <StatusBar
         backgroundColor={Styles.colors.light}
         barStyle="dark-content"
       />
       <LoginImg height={'40%'} width={Styles.maxWidth} />
       <Text style={localStyles.header}> Log In </Text>
-      <TextInput
+      <InputField
         placeholder="Enter Username"
         onChangeText={value => handleUsernameChange(value)}
         errorMessage={!data.isValidUsername ? 'Invalid Username' : ''}
         autoCapitalize="none"
       />
-      <TextInput
+      <InputField
         placeholder="Enter Password"
         onChangeText={value => handlePasswordChange(value)}
         errorMessage={!data.isValidPassword ? 'Invalid Password' : ''}
@@ -82,7 +98,12 @@ const LoginScreen = ({navigation}) => {
         />
       </View>
       <View style={localStyles.footerContainer}>
-        <ButtonPrimary title={'Log In'} onPress={handleLoginClick} />
+        <ButtonPrimary
+          title={'Log In'}
+          onPress={() => {
+            handleLogin(data.username, data.password);
+          }}
+        />
         <Text
           style={[
             Styles.texts.secondary,
@@ -92,15 +113,15 @@ const LoginScreen = ({navigation}) => {
         </Text>
         <ButtonTextOnly title={'Return!'} onPress={() => navigation.goBack()} />
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
 const localStyles = StyleSheet.create({
-  container: {
+  baseContainer: {
     ...Styles.containers.fill,
     ...Styles.containers.pad,
-    backgroundColor: '#fff',
+    backgroundColor: Styles.colors.light,
   },
   footerContainer: {
     padding: 28,

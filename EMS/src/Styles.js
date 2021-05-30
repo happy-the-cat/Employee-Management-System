@@ -1,6 +1,8 @@
 import {StyleSheet, Dimensions} from 'react-native';
 
+// Constants
 const maxWidth = Dimensions.get('window').width - 30 * 2;
+const maxHeight = Dimensions.get('window').height - 30 * 2;
 
 const whitespaces = {
   margin: 30,
@@ -9,14 +11,14 @@ const whitespaces = {
 };
 
 const colors = {
-  light: '#fff',
-  onBackground: '#000',
+  light: '#ffffff',
+  onBackground: '#000000',
   primary: '#2962FF',
   primaryLight: '#529CFF',
   primaryDark: '#0039CB',
-  onPrimary: '#fff',
+  onPrimary: '#ffffff',
   secondary: '#E7EDF7',
-  onSecondary: '#000',
+  onSecondary: '#000000',
   gray: '#8F8F8F',
   darkGray: '#333333',
   lightGray: '#E0E0E0',
@@ -24,6 +26,7 @@ const colors = {
   error: '#D50000',
 };
 
+// Styles
 const texts = StyleSheet.create({
   app_name: {
     fontSize: 32,
@@ -45,16 +48,23 @@ const texts = StyleSheet.create({
     fontFamily: 'Oxygen-Regular',
   },
   secondaryEmphasis: {
-    fontFamily: 'Oxygen-Regular',
     fontSize: 14,
+    fontFamily: 'Oxygen-Regular',
     fontWeight: 'bold',
-    alignSelf: 'center',
   },
   secondaryCaps: {
-    fontFamily: 'Oxygen',
     fontSize: 14,
-    alignSelf: 'center',
+    fontFamily: 'Oxygen',
     textTransform: 'uppercase',
+  },
+  tertiary: {
+    fontSize: 12,
+    fontFamily: 'Oxygen-Regular',
+  },
+  tertiaryEmphasis: {
+    fontSize: 12,
+    fontFamily: 'Oxygen-Regular',
+    fontWeight: 'bold',
   },
 });
 
@@ -67,9 +77,15 @@ const containers = StyleSheet.create({
   },
   horizontal: {
     flexDirection: 'row',
-    alignSelf: 'center',
     justifyContent: 'flex-start',
+  },
+  overlap: {
+    position: 'absolute',
+    zIndex: -1,
+  },
+  flip: {
+    transform: [{scaleX: -1}],
   },
 });
 
-export {colors, texts, containers, maxWidth, whitespaces};
+export {colors, texts, containers, maxWidth, maxHeight, whitespaces};

@@ -1,9 +1,9 @@
 import React from 'react';
 import {View, TouchableOpacity, Text, StyleSheet} from 'react-native';
-import * as Styles from '../Styles';
+
 import {Button} from 'react-native-elements';
 
-const Buttons = () => {};
+import * as Styles from '../Styles';
 
 const ButtonPrimary = ({onPress, title, containerStyle, textStyle}) => (
   <View style={baseButtonStyles.buttonContainer}>
@@ -27,12 +27,28 @@ const ButtonSecondary = ({onPress, title, containerStyle, textStyle}) => (
   </View>
 );
 
-const ButtonTextOnly = ({title, onPress, containerStyle, titleStyle}) => (
+const ButtonTextOnly = ({
+  title,
+  onPress,
+  containerStyle,
+  titleStyle,
+  textColor,
+}) => (
   <Button
-    onPress={onPress}
     containerStyle={[containerStyle, textOnlyStyles.button]}
+    onPress={onPress}
     title={title}
-    titleStyle={[titleStyle, textOnlyStyles.text]}
+    titleStyle={[
+      titleStyle,
+      textOnlyStyles.text,
+      [
+        {
+          ...(textColor
+            ? {color: textColor}
+            : {color: Styles.colors.onBackground}),
+        },
+      ],
+    ]}
     type="clear"
   />
 );
@@ -57,6 +73,7 @@ const primaryStyles = StyleSheet.create({
   text: {
     ...Styles.texts.secondaryEmphasis,
     color: Styles.colors.onPrimary,
+    alignSelf: 'center',
   },
 });
 
@@ -64,10 +81,13 @@ const secondaryStyles = StyleSheet.create({
   button: {
     ...baseButtonStyles.baseButton,
     backgroundColor: Styles.colors.light,
+    borderWidth: 0.5,
+    borderColor: Styles.colors.lightGray,
   },
   text: {
     ...Styles.texts.secondaryEmphasis,
     color: Styles.colors.onBackground,
+    alignSelf: 'center',
   },
 });
 
@@ -77,7 +97,7 @@ const textOnlyStyles = StyleSheet.create({
   },
   text: {
     ...Styles.texts.secondaryEmphasis,
-    color: Styles.colors.onBackground,
+    alignSelf: 'center',
   },
 });
 

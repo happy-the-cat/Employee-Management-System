@@ -1,22 +1,344 @@
 import React from 'react';
+import {
+  View,
+  StyleSheet,
+  ActivityIndicator,
+  ScrollView,
+  Button,
+} from 'react-native';
 
 import 'react-native-gesture-handler';
 
 import {NavigationContainer} from '@react-navigation/native';
-import {createStackNavigator} from '@react-navigation/stack';
+import {createMaterialBottomTabNavigator} from '@react-navigation/material-bottom-tabs';
+import {createStackNavigator, TransitionPresets} from '@react-navigation/stack';
+import {SafeAreaProvider, SafeAreaView} from 'react-native-safe-area-context';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import EncryptedStorage from 'react-native-encrypted-storage';
 
-import RootStackScreen from './src/screens/rootScreens/RootStackScreen';
+import {AuthContext} from './src/component/Context';
+
+import RootStack from './src/screens/rootScreens/RootStack';
+import EmployeeStack from './src/screens/employeeScreens/EmployeeStack';
+import HRStack from './src/screens/hrScreens/HRStack';
+import AttendanceScreen from './src/screens/AttendanceScreen';
+import HomeScreen from './src/screens/HomeScreen';
+import ProfileScreen from './src/screens/ProfileScreen';
 
 const Stack = createStackNavigator();
+const Tab = createMaterialBottomTabNavigator();
 
-const App = () => {
+const OrganizationScreen = () => {
+  return <SafeAreaView />;
+};
+
+const NotificationsScreen = () => {
+  return <SafeAreaView />;
+};
+
+const MenuScreen = ({navigation}) => {
   return (
-    <NavigationContainer>
-      <RootStackScreen />
-      {/*<Stack.Navigator></Stack.Navigator>*/}
-    </NavigationContainer>
+    <SafeAreaView>
+      <ScrollView>
+        <Button
+          title={'Profile'}
+          onPress={() => {
+            navigation.navigate('Profile');
+          }}
+        />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
+
+const MyStack = ({route}) => {
+  return (
+    <Stack.Navigator initialRouteName={'Menu'}>
+      <Stack.Screen
+        name={'Menu'}
+        component={MenuScreen}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name={'Profile'}
+        component={ProfileScreen}
+        options={({navigation}) => ({
+          headerStyle: {
+            backgroundColor: 'transparent',
+          },
+          headerLeft: () => (
+            <Ionicons
+              style={{marginLeft: 16}}
+              name={'arrow-back-outline'}
+              color={'green'}
+              size={24}
+              onPress={() => {
+                navigation.navigate('Menu');
+              }}
+            />
+          ),
+          headerBackTitleVisible: false,
+          headerTitle: '',
+          headerRight: () => (
+            <Ionicons
+              style={{marginRight: 16}}
+              name={'pencil-outline'}
+              color={'green'}
+              size={24}
+            />
+          ),
+        })}
+      />
+    </Stack.Navigator>
+  );
+};
+
+const App = () => {
+  const userType = 'hr'; /*TODO: test, remove later*/
+  const initialLoginState = {
+    isLoading: true,
+    userName: null,
+    userToken: 'null',
+  };
+
+  const loginReducer = (prevState, action) => {
+    switch (action.type) {
+      case 'RETRIEVE_TOKEN':
+        return {
+          ...prevState,
+          userToken: action.token,
+          isLoading: false,
+        };
+      case 'LOGIN':
+        return {
+          ...prevState,
+          userName: action.id,
+          userToken: action.token,
+          isLoading: false,
+        };
+      case 'LOGOUT':
+        return {
+          ...prevState,
+          userName: null,
+          userToken: null,
+          isLoading: false,
+        };
+      case 'REGISTER':
+        return {
+          ...prevState,
+          userName: action.id,
+          userToken: action.token,
+          isLoading: false,
+        };
+    }
+  };
+
+  const [loginState, dispatch] = React.useReducer(
+    loginReducer,
+    initialLoginState,
+  );
+
+  const authContext = React.useMemo(
+    () => ({
+      signIn: async foundUser => {
+        /*TODO: actual scenario username and password r fetch by some API then
+         *  match against some user-pass in the database,
+         *  token is also retrieved from database */
+        const userToken = String(foundUser[0].userToken);
+        const userName = foundUser[0].username;
+        try {
+          await EncryptedStorage.setItem('userToken', userToken);
+        } catch (e) {
+          console.log(e);
+        }
+        dispatch({type: 'LOGIN', id: userName, token: userToken});
+      },
+      signOut: async () => {
+        try {
+          await EncryptedStorage.removeItem('userSession');
+        } catch (e) {
+          console.log(e);
+        }
+        dispatch({type: 'LOGOUT'});
+      },
+      signUp: () => {},
+      // signUp: async (userName, password) => {
+      //   /*TODO: actual scenario username and password r fetch by some API then
+      //    *  match against some user-pass in the database,
+      //    *  token is also retrieved from database */
+      //   let userToken;
+      //   userToken = null;
+      //   try {
+      //     userToken = 'dummy-tokenn';
+      //     await EncryptedStorage.setItem(
+      //       'userSession',
+      //       JSON.stringify({
+      //         userToken: userToken,
+      //         password: password,
+      //       }),
+      //     );
+      //   } catch (e) {
+      //     console.log(e);
+      //   }
+      //   console.log('user token: ', userToken);
+      //   dispatch({
+      //     type: 'REGISTER',
+      //     id: userName,
+      //     token: userToken,
+      //   });
+      // },
+    }),
+    [],
+  );
+  //
+  // React.useEffect(() => {
+  //   setTimeout(async () => {
+  //     /* TODO: fetch some token from storage or database */
+  //     let userToken = null;
+  //     try {
+  //       const session = await EncryptedStorage.getItem('userSession');
+  //       if (session) {
+  //         const sessionData = JSON.parse(session);
+  //         userToken = sessionData.userToken;
+  //       }
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //     console.log('user token: ', userToken);
+  //     dispatch({type: 'RETRIEVE_TOKEN', token: userToken});
+  //   }, 1000);
+  // }, []);
+  //
+  // if (loginState.isLoading) {
+  //   return (
+  //     <View style={localStyles.loadingContainer}>
+  //       <ActivityIndicator size="large" />
+  //     </View>
+  //   );
+  // }
+
+  const HomeStack = () => {
+    return (
+      <Stack.Navigator
+        screenOptions={({navigation, route}) => ({
+          ...TransitionPresets.ModalSlideFromBottomIOS,
+        })}>
+        <Stack.Screen
+          name="Home"
+          component={HomeScreen}
+          initialParams={{userType: userType}}
+          options={{headerShown: false}}
+        />
+        {userType.toLowerCase() === 'hr' ? (
+          <Stack.Screen
+            name="HRScreens"
+            component={HRStack}
+            options={{headerShown: false}}
+          />
+        ) : (
+          <Stack.Screen
+            name="EmployeeScreens"
+            component={EmployeeStack}
+            options={{headerShown: false}}
+          />
+        )}
+      </Stack.Navigator>
+    );
+  };
+
+  return (
+    <AuthContext.Provider value={authContext}>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          {loginState.userToken !== null ? (
+            <Tab.Navigator initialRouteName={HomeStack} labeled={false}>
+              <Tab.Screen
+                name={'Home'}
+                component={HomeStack}
+                options={{
+                  tabBarIcon: ({focused, color}) => (
+                    <Ionicons
+                      name={focused ? 'home' : 'home-outline'}
+                      color={color}
+                      size={24}
+                    />
+                  ),
+                  tabBarColor: 'darkblue',
+                }}
+              />
+              <Tab.Screen
+                name={'Organization'}
+                component={OrganizationScreen}
+                options={{
+                  tabBarIcon: ({focused, color}) => (
+                    <Ionicons
+                      name={focused ? 'business' : 'business-outline'}
+                      color={color}
+                      size={24}
+                    />
+                  ),
+                  tabBarColor: 'darkorange',
+                }}
+              />
+              <Tab.Screen
+                name={'Profile'}
+                component={ProfileScreen}
+                options={{
+                  tabBarIcon: ({focused, color}) => (
+                    <Ionicons
+                      name={focused ? 'person' : 'person-outline'}
+                      color={color}
+                      size={24}
+                    />
+                  ),
+                  tabBarColor: 'darkgreen',
+                }}
+              />
+              <Tab.Screen
+                name={'Notifications'}
+                component={NotificationsScreen}
+                options={{
+                  tabBarIcon: ({focused, color}) => (
+                    <Ionicons
+                      name={focused ? 'notifications' : 'notifications-outline'}
+                      color={color}
+                      size={24}
+                    />
+                  ),
+                  tabBarColor: 'darkred',
+                }}
+              />
+              <Tab.Screen
+                name={'Menu'}
+                component={MyStack}
+                options={{
+                  tabBarIcon: ({focused, color}) => (
+                    <Ionicons
+                      name={focused ? 'apps' : 'apps-outline'}
+                      color={color}
+                      size={24}
+                    />
+                  ),
+                  tabBarColor: 'indigo',
+                }}
+              />
+            </Tab.Navigator>
+          ) : (
+            <RootStack />
+          )}
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </AuthContext.Provider>
+  );
+};
+
+const localStyles = StyleSheet.create({
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
 export default App;
 

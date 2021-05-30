@@ -1,14 +1,17 @@
 import React, {useState} from 'react';
-import {StatusBar, StyleSheet, Text, View} from 'react-native';
+import {StatusBar, StyleSheet, Text, View, ScrollView} from 'react-native';
 
+import {SafeAreaView} from 'react-native-safe-area-context';
+
+import {AuthContext} from '../../component/Context';
 import {ButtonPrimary, ButtonTextOnly} from '../../component/Button';
-import {TextInput} from '../../component/TextInput';
+import {InputField} from '../../component/InputField';
 import {DropdownPicker} from '../../component/DropdownPicker';
 import {OverlayDatePicker} from '../../component/OverlayDatePicker';
 
 import * as Styles from '../../Styles';
 
-const SignupScreen = ({navigation}) => {
+const SignupScreen = ({navigation, route}) => {
   const [data, setData] = useState({
     username: '',
     password: '',
@@ -16,12 +19,12 @@ const SignupScreen = ({navigation}) => {
     firstName: '',
     lastName: '',
     emailAddress: '',
-    isValidFirstName: true,
-    isValidLastName: true,
-    isValidUsername: true,
-    isValidPassword: true,
-    isPasswordMatch: true,
-    isValidEmail: true,
+    isValidFirstName: false,
+    isValidLastName: false,
+    isValidUsername: false,
+    isValidPassword: false,
+    isPasswordMatch: false,
+    isValidEmail: false,
   });
   const [birthday, setBirthday] = useState(new Date());
   const [gender, setGender] = useState('M');
@@ -35,6 +38,8 @@ const SignupScreen = ({navigation}) => {
     she: 'She',
     they: 'They',
   };
+  const {userType} = route.params;
+  const {signUp} = React.useContext(AuthContext);
 
   const handleNameChange = (value, isFirstName) => {
     if (value.trim().length >= 2) {
@@ -129,7 +134,7 @@ const SignupScreen = ({navigation}) => {
     }
   };
 
-  const handleSignupClick = () => {
+  const handleSignup = () => {
     if (
       data.isValidUsername === true &&
       data.isValidFirstName === true &&
@@ -139,114 +144,122 @@ const SignupScreen = ({navigation}) => {
       data.isPasswordMatch === true
     ) {
       /*TODO: add handler function for pressing signup button*/
+      signUp(); // Call to AuthContext's signUp (from App.js authentication)
     }
   };
 
   return (
-    <View style={localStyles.container}>
+    <SafeAreaView style={localStyles.baseContainer}>
       <StatusBar
         backgroundColor={Styles.colors.light}
         barStyle="dark-content"
       />
-      <Text style={Styles.texts.title}> Sign Up </Text>
-      <View style={localStyles.horizontalContainer}>
-        <TextInput
-          placeholder="First Name"
-          onChangeText={value => handleNameChange(value, true)}
-          containerStyle={localStyles.inputHalvedWidth}
-          errorMessage={!data.isValidFirstName ? 'Invalid Input' : ''}
+      <ScrollView
+        style={Styles.containers.pad}
+        keyboardShouldPersistTaps="handled">
+        <Text style={Styles.texts.title}> Sign Up </Text>
+        <View style={localStyles.horizontalContainer}>
+          <InputField
+            placeholder="First Name"
+            onChangeText={value => handleNameChange(value, true)}
+            containerStyle={localStyles.inputHalvedWidth}
+            errorMessage={!data.isValidFirstName ? 'Invalid Input' : ''}
+          />
+          <InputField
+            placeholder="Last Name"
+            onChangeText={value => handleNameChange(value, false)}
+            containerStyle={localStyles.inputHalvedWidth}
+            errorMessage={!data.isValidLastName ? 'Invalid Input' : ''}
+          />
+        </View>
+        <InputField
+          placeholder="E-mail Address"
+          onChangeText={value => handleEmailChange(value)}
+          errorMessage={!data.isValidEmail ? 'Invalid Email' : ''}
+          autoCapitalize="none"
         />
-        <TextInput
-          placeholder="Last Name"
-          onChangeText={value => handleNameChange(value, false)}
-          containerStyle={localStyles.inputHalvedWidth}
-          errorMessage={!data.isValidLastName ? 'Invalid Input' : ''}
+        <InputField
+          placeholder="Username"
+          onChangeText={value => handleUsernameChange(value)}
+          errorMessage={!data.isValidUsername ? 'Invalid Username' : ''}
+          autoCapitalize="none"
         />
-      </View>
-      <TextInput
-        placeholder="E-mail Address"
-        onChangeText={value => handleEmailChange(value)}
-        errorMessage={!data.isValidEmail ? 'Invalid Email' : ''}
-        autoCapitalize="none"
-      />
-      <TextInput
-        placeholder="Username"
-        onChangeText={value => handleUsernameChange(value)}
-        errorMessage={!data.isValidUsername ? 'Invalid Username' : ''}
-        autoCapitalize="none"
-      />
-      <TextInput
-        placeholder="Password"
-        onChangeText={value => handlePasswordChange(value)}
-        errorMessage={!data.isValidPassword ? 'Invalid Password' : ''}
-        autoCapitalize="none"
-        secureTextEntry={true}
-      />
-      <TextInput
-        placeholder="Confirm Password"
-        onChangeText={value => handleMatchPassword(value)}
-        errorMessage={!data.isPasswordMatch ? 'Password does not match' : ''}
-        autoCapitalize="none"
-        secureTextEntry={true}
-      />
-      <OverlayDatePicker
-        prompt={
-          'Birthday: ' +
-          birthday.getFullYear() +
-          '-' +
-          (birthday.getMonth() + 1) +
-          '-' +
-          birthday.getDate()
-        }
-        value={birthday}
-        onChange={date => setBirthday(date)}
-        maximumDate={new Date()}
-        promptStyle={localStyles.datePickerPrompt}
-      />
-      <View style={localStyles.horizontalContainer}>
-        <DropdownPicker
-          selectedValue={gender}
-          onValueChange={itemValue => setGender(itemValue)}
-          prompt={'Gender'}
-          pickerItems={genderOptions}
-          containerStyle={localStyles.pickerHalvedWidth}
+        <InputField
+          placeholder="Password"
+          onChangeText={value => handlePasswordChange(value)}
+          errorMessage={!data.isValidPassword ? 'Invalid Password' : ''}
+          autoCapitalize="none"
+          secureTextEntry={true}
         />
-        <DropdownPicker
-          selectedValue={pronoun}
-          onValueChange={itemValue => setPronoun(itemValue)}
-          prompt={'Pronoun'}
-          pickerItems={pronounOptions}
-          containerStyle={localStyles.pickerHalvedWidth}
+        <InputField
+          placeholder="Confirm Password"
+          onChangeText={value => handleMatchPassword(value)}
+          errorMessage={!data.isPasswordMatch ? 'Password does not match' : ''}
+          autoCapitalize="none"
+          secureTextEntry={true}
         />
-      </View>
-      <View style={localStyles.footerContainer}>
-        <ButtonPrimary title={'Sign Up'} onPress={handleSignupClick} />
-        <Text
-          style={[
-            Styles.texts.secondary,
-            {marginTop: Styles.whitespaces.outer},
-          ]}>
-          {'Incorrect user type? Already have an account?'}
-        </Text>
-        <ButtonTextOnly title={'Return!'} onPress={() => navigation.goBack()} />
-      </View>
-    </View>
+        <OverlayDatePicker
+          prompt={
+            'Birthday: ' +
+            birthday.getFullYear() +
+            '-' +
+            (birthday.getMonth() + 1) +
+            '-' +
+            birthday.getDate()
+          }
+          value={birthday}
+          onChange={date => setBirthday(date)}
+          maximumDate={new Date()}
+          promptStyle={localStyles.datePickerPrompt}
+        />
+        <View style={localStyles.horizontalContainer}>
+          <DropdownPicker
+            selectedValue={gender}
+            onValueChange={itemValue => setGender(itemValue)}
+            prompt={'Gender'}
+            pickerItems={genderOptions}
+            containerStyle={localStyles.pickerHalvedWidth}
+          />
+          <DropdownPicker
+            selectedValue={pronoun}
+            onValueChange={itemValue => setPronoun(itemValue)}
+            prompt={'Pronoun'}
+            pickerItems={pronounOptions}
+            containerStyle={localStyles.pickerHalvedWidth}
+          />
+        </View>
+        <View style={localStyles.footerContainer}>
+          <ButtonPrimary title={'Sign Up'} onPress={handleSignup} />
+          <Text
+            style={[
+              Styles.texts.secondary,
+              {marginTop: Styles.whitespaces.outer},
+            ]}>
+            {'Incorrect user type? Already have an account?'}
+          </Text>
+          <ButtonTextOnly
+            title={'Return!'}
+            onPress={() => navigation.goBack()}
+          />
+        </View>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const localStyles = StyleSheet.create({
-  container: {
+  baseContainer: {
     ...Styles.containers.fill,
-    ...Styles.containers.pad,
-    backgroundColor: '#fff',
+    backgroundColor: Styles.colors.light,
   },
   footerContainer: {
     paddingVertical: 28,
     alignItems: 'center',
+    marginBottom: Styles.whitespaces.margin,
   },
   horizontalContainer: {
     ...Styles.containers.horizontal,
-    justifyContent: 'space-between',
+    alignSelf: 'center',
   },
   inputHalvedWidth: {
     width: Styles.maxWidth / 2,

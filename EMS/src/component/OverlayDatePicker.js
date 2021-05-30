@@ -29,9 +29,6 @@ const OverlayDatePicker = ({
   };
 
   return (
-    // create view w/ button for opening overlay (date picker)
-    // create overlay visibility hook
-    // create overlay and style it
     <View>
       <Button
         title={prompt}
