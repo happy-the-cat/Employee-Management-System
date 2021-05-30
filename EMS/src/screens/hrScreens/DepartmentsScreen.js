@@ -28,13 +28,14 @@ import {InputField} from '../../component/InputField';
 
 import {Departments} from '../../../model/departments';
 import * as Styles from '../../Styles';
+import * as Utilities from '../../Utilities';
 
 const Stack = createStackNavigator();
 
 const DepartmentsScreen = ({navigation, route}) => {
   const [data, setData] = useState(
     /*TODO: retrieve data and IDs from database. This is only a dummy data.*/
-    Departments,
+    Utilities.filterArrayWithKey(Departments, 'name'),
   );
   const actions = [
     {
@@ -97,7 +98,7 @@ const DepartmentsScreen = ({navigation, route}) => {
   ];
   const [overlayData, setOverlayData] = useState({
     isVisible: false,
-    content: '',
+    content: '', // 'addDepartment' || 'removeDepartment' || 'renameDepartment' || 'updateDepartment'
     departmentName: '',
     isValidDepartmentName: false,
     departmentHead: '',
@@ -706,7 +707,7 @@ const UpdateModalScreen = ({navigation, route}) => {
             setDepartment({...department, members: temp});
             setModalData({...modalData, hasUnsavedChanges: true});
           },
-          style: 'default',
+          style: 'destructive',
         },
         {
           text: 'No',

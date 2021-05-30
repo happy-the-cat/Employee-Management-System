@@ -5,8 +5,6 @@ import {Button} from 'react-native-elements';
 
 import * as Styles from '../Styles';
 
-const Buttons = () => {};
-
 const ButtonPrimary = ({onPress, title, containerStyle, textStyle}) => (
   <View style={baseButtonStyles.buttonContainer}>
     <TouchableOpacity
@@ -38,6 +36,7 @@ const ButtonTextOnly = ({
 }) => (
   <Button
     containerStyle={[containerStyle, textOnlyStyles.button]}
+    onPress={onPress}
     title={title}
     titleStyle={[
       titleStyle,

@@ -4,9 +4,12 @@ import {StyleSheet} from 'react-native';
 import {Avatar} from 'react-native-elements';
 
 import * as Styles from '../Styles';
+import * as Utilities from '../Utilities';
 
 const RoundAvatar = ({source, onPress, size, containerStyle, title, color}) => {
-  const txtColor = color ? Styles.getContrast(color) : Styles.colors.onPrimary;
+  const txtColor = color
+    ? Utilities.getContrast(color)
+    : Styles.colors.onPrimary;
   return (
     <Avatar
       rounded

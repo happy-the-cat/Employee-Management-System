@@ -16,9 +16,14 @@ import {SearchField, SearchDropDown} from '../../component/SearchField';
 
 import {Departments} from '../../../model/departments';
 import * as Styles from '../../Styles';
+import * as Utilities from '../../Utilities';
 
 const DepartmentsScreen = ({navigation}) => {
-  const data = Departments; /*TODO: retrieve data and IDs from database. This is only a dummy data.*/
+  const data = Utilities.filterArrayWithKey(
+    /*TODO: retrieve data and IDs from database. This is only a dummy data.*/
+    Departments,
+    'name',
+  );
   const [dataCords, setDataCords] = useState([]);
   const [searchData, setSearchData] = useState({
     input: '',

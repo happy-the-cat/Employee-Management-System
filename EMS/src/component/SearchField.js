@@ -7,7 +7,17 @@ import {ListItem, SearchBar} from 'react-native-elements';
 import * as Styles from '../Styles';
 
 const SearchField = React.forwardRef(
-  ({placeholder, onChangeText, value, lightTheme, containerStyle}, ref) => (
+  (
+    {
+      placeholder,
+      onChangeText,
+      value,
+      lightTheme,
+      containerStyle,
+      inputContainerStyle,
+    },
+    ref,
+  ) => (
     <SearchBar
       ref={ref}
       placeholder={placeholder}
@@ -16,7 +26,7 @@ const SearchField = React.forwardRef(
       platform="default"
       lightTheme={lightTheme}
       containerStyle={[fieldStyles.container, containerStyle]}
-      inputContainerStyle={fieldStyles.inputContainer}
+      inputContainerStyle={[fieldStyles.inputContainer, inputContainerStyle]}
       inputStyle={fieldStyles.inputText}
       placeholderTextColor={Styles.colors.gray}
     />
@@ -29,12 +39,12 @@ const SearchDropDown = ({
   noResultPrompt,
   containerStyle,
 }) => (
-  <View style={[dropDownStyles.mainContainer, containerStyle]}>
+  <ScrollView style={[dropDownStyles.mainContainer, containerStyle]}>
     {content.length ? (
       content.map(item => (
-        <Ripple onPress={() => onPressItem(item.id)}>
+        <Ripple key={item.id} onPress={() => onPressItem(item.id)}>
           <ListItem
-            key={item.id}
+            //key={item.id}
             bottomDivider
             containerStyle={dropDownStyles.listContainer}>
             <ListItem.Content>
@@ -48,7 +58,7 @@ const SearchDropDown = ({
     ) : (
       <Text style={dropDownStyles.noResultText}>{noResultPrompt}</Text>
     )}
-  </View>
+  </ScrollView>
 );
 
 const fieldStyles = StyleSheet.create({
@@ -73,7 +83,6 @@ const fieldStyles = StyleSheet.create({
 });
 
 const dropDownStyles = StyleSheet.create({
-  baseContainer: {},
   mainContainer: {
     position: 'absolute',
     top: 65,

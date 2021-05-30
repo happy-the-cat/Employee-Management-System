@@ -10,16 +10,16 @@ import {MemberListItem} from '../../component/DepartmentsLists';
 
 import {Employees} from '../../../model/employees';
 import * as Styles from '../../Styles';
+import * as Utilities from '../../Utilities';
 
 const EmployeesScreen = ({navigation}) => {
   /*TODO: retrieve data and IDs from database. This is only a dummy data.*/
-  const data = Employees;
+  const data = Utilities.filterArrayWithKey(Employees, 'name');
   const [searchData, setSearchData] = useState({
     input: '',
     isSearching: false,
     searchList: [],
   });
-  const searchRef = React.createRef();
 
   const handleSearch = input => {
     // based on https://swairaq.medium.com/react-native-dropdown-searchbar-adc4532f7535
@@ -61,7 +61,6 @@ const EmployeesScreen = ({navigation}) => {
         placeholder="Search Name"
         onChangeText={value => handleSearch(value)}
         value={searchData.input}
-        ref={searchRef}
         containerStyle={{marginHorizontal: Styles.whitespaces.outer}}
       />
       <SectionListContacts
@@ -116,7 +115,8 @@ const localStyles = StyleSheet.create({
   lettersContainer: {
     marginRight: Styles.whitespaces.inner / 2,
     width: 25,
-    backgroundColor: 'rgba(' + Styles.hexToRgb(Styles.colors.light) + ',0.75)',
+    backgroundColor:
+      'rgba(' + Utilities.hexToRgb(Styles.colors.light) + ',0.75)',
     borderRadius: 10,
   },
   itemListContainer: {

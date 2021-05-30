@@ -1,25 +1,38 @@
 import React, {useState} from 'react';
 import {Alert, View, Text, StatusBar, StyleSheet, Keyboard} from 'react-native';
+import 'react-native-get-random-values';
+import {nanoid} from 'nanoid';
 
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {Divider} from 'react-native-elements';
+import {Divider, Icon, Overlay} from 'react-native-elements';
 import SectionListContacts from 'react-native-sectionlist-contacts';
 
 import {SearchDropDown, SearchField} from '../../component/SearchField';
 import {MemberListItem} from '../../component/DepartmentsLists';
+import {InputField} from '../../component/InputField';
+import {ButtonPrimary} from '../../component/Button';
 
 import {Employees} from '../../../model/employees';
 import * as Styles from '../../Styles';
+import * as Utilities from '../../Utilities';
+import {Departments} from '../../../model/departments';
 
 const EmployeesScreen = ({navigation}) => {
   /*TODO: retrieve data and IDs from database. This is only a dummy data.*/
-  const data = Employees;
+  const [data, setData] = useState(
+    Utilities.filterArrayWithKey(Employees, 'name'),
+  );
+  const [inputData, setInputData] = useState({
+    isVisible: false,
+    content: '', // 'addEmployee' || 'removeEmployee'
+    employeeName: '',
+    isValidEmployeeName: false,
+  });
   const [searchData, setSearchData] = useState({
     input: '',
     isSearching: false,
     searchList: [],
   });
-  const searchRef = React.createRef();
 
   const handleSearch = input => {
     // based on https://swairaq.medium.com/react-native-dropdown-searchbar-adc4532f7535
@@ -51,19 +64,213 @@ const EmployeesScreen = ({navigation}) => {
     }
   };
 
+  const handleEmployeeNameInput = value => {
+    if (value.trim().length >= 2) {
+      setInputData({
+        ...inputData,
+        employeeName: value,
+        isValidEmployeeName: true,
+      });
+    } else {
+      setInputData({
+        ...inputData,
+        isValidEmployeeName: false,
+      });
+    }
+  };
+
+  const addEmployee = () => {
+    if (inputData.isValidEmployeeName) {
+      if (
+        data.find(
+          employee =>
+            employee.name.trim().toLowerCase() ===
+            inputData.employeeName.trim().toLowerCase(),
+        ) === undefined
+      ) {
+        setData([
+          ...data,
+          {
+            id: nanoid(),
+            name: inputData.employeeName,
+          },
+        ]);
+        Alert.alert('Success', 'Employee has been added successfully.');
+        setInputData({isVisible: false});
+      } else {
+        Alert.alert('Error', 'Employee is already part of the company.');
+      }
+    }
+  };
+
+  const removeEmployee = () => {
+    if (inputData.isValidEmployeeName) {
+      const temp = data.filter(employee => {
+        if (
+          employee.name.trim().toLowerCase() !==
+          inputData.employeeName.trim().toLowerCase()
+        ) {
+          return employee;
+        }
+      });
+      if (temp.length !== data.length) {
+        Alert.alert(
+          'Confirm',
+          'Are you sure you want to remove them from the company? This action cannot be undone.',
+          [
+            {
+              text: 'Yes',
+              onPress: () => {
+                setData(temp);
+              },
+              style: 'destructive',
+            },
+            {
+              text: 'No',
+              onPress: () => null,
+              style: 'cancel',
+            },
+          ],
+        );
+        setInputData({isVisible: false});
+      } else {
+        Alert.alert(
+          'Error',
+          'Cannot find inputted employee in the databases. Try searching for them in the search bar to check first.',
+        );
+      }
+    }
+  };
+
+  // React.useLayoutEffect(() => {
+  //   navigation.setOptions({
+  //     headerRight: () => (
+  //       <>
+  //         <Icon
+  //           name="person-add"
+  //           type="ionicons"
+  //           size={30}
+  //           color="forestgreen"
+  //           onPress={addEmployee}
+  //         />
+  //         <Icon
+  //           name="person-remove"
+  //           type="ionicons"
+  //           size={30}
+  //           color="red"
+  //           onPress={removeEmployee}
+  //         />
+  //       </>
+  //     ),
+  //   });
+  // }, [addEmployee, navigation, removeEmployee]);
+
+  const renderInputOverlay = () => (
+    <Overlay
+      isVisible={inputData.isVisible}
+      onBackdropPress={() =>
+        setInputData({
+          isVisible: false,
+        })
+      }
+      overlayStyle={localStyles.overlayContainer}>
+      {(() => {
+        if (inputData.content === 'addEmployee') {
+          return (
+            <>
+              <Text style={localStyles.overlayHeader}>Add New Employee</Text>
+              <Text style={localStyles.overlayText}>
+                Enter the new employee's name to add them to the database.
+              </Text>
+              <InputField
+                autoFocus
+                autocapitalize="words"
+                placeholder={'Employee Name'}
+                onChangeText={value => handleEmployeeNameInput(value)}
+                errorMessage={
+                  !inputData.isValidEmployeeName ? 'Invalid Input' : ''
+                }
+                containerStyle={localStyles.overlayInput}
+              />
+              <ButtonPrimary
+                title="Add"
+                onPress={addEmployee}
+                containerStyle={localStyles.overlayButton}
+              />
+            </>
+          );
+        } else if (inputData.content === 'removeEmployee') {
+          return (
+            <>
+              <Text style={localStyles.overlayHeader}>Remove Employee</Text>
+              <Text style={localStyles.overlayText}>
+                Enter the name of the employee to be removed from the database.
+              </Text>
+              <InputField
+                autoFocus
+                autocapitalize="words"
+                placeholder={'Employee Name'}
+                onChangeText={value => handleEmployeeNameInput(value)}
+                errorMessage={
+                  !inputData.isValidEmployeeName ? 'Invalid Input' : ''
+                }
+                containerStyle={localStyles.overlayInput}
+              />
+              <ButtonPrimary
+                title="Remove"
+                onPress={removeEmployee}
+                containerStyle={localStyles.overlayButton}
+              />
+            </>
+          );
+        }
+      })()}
+    </Overlay>
+  );
+
   return (
     <SafeAreaView style={localStyles.baseContainer}>
       <StatusBar
         backgroundColor={Styles.colors.light}
         barStyle="dark-content"
       />
-      <SearchField
-        placeholder="Search Name"
-        onChangeText={value => handleSearch(value)}
-        value={searchData.input}
-        ref={searchRef}
-        containerStyle={{marginHorizontal: Styles.whitespaces.outer}}
-      />
+      {renderInputOverlay()}
+      <View style={localStyles.horizontalContainer}>
+        <SearchField
+          placeholder="Search Name"
+          onChangeText={value => handleSearch(value)}
+          value={searchData.input}
+          containerStyle={localStyles.searchBarContainer}
+        />
+        <Icon
+          name="person-add"
+          type="ionicons"
+          onPress={() =>
+            setInputData({
+              ...inputData,
+              isVisible: true,
+              content: 'addEmployee',
+            })
+          }
+          size={30}
+          color="forestgreen"
+          containerStyle={localStyles.iconContainer}
+        />
+        <Icon
+          name="person-remove"
+          type="ionicons"
+          onPress={() =>
+            setInputData({
+              ...inputData,
+              isVisible: true,
+              content: 'removeEmployee',
+            })
+          }
+          size={30}
+          color="red"
+          containerStyle={localStyles.iconContainer}
+        />
+      </View>
       <SectionListContacts
         sectionListData={data}
         letterViewStyle={localStyles.lettersContainer}
@@ -73,7 +280,6 @@ const EmployeesScreen = ({navigation}) => {
             name={employee.name}
             key={employee.id}
             id={employee.id}
-            onPress={id => console.log('pressed ' + id)}
             containerStyle={localStyles.itemListContainer}
             hideChevron
           />
@@ -89,9 +295,7 @@ const EmployeesScreen = ({navigation}) => {
       />
       {searchData.isSearching && (
         <SearchDropDown
-          onPressItem={id => {
-            /* TODO: Add function to the clicked employee's profile */
-            console.log('pressed' + id);
+          onPressItem={() => {
             setSearchData({input: '', isSearching: false, searchList: []});
             Keyboard.dismiss();
           }}
@@ -111,18 +315,64 @@ const localStyles = StyleSheet.create({
     paddingHorizontal: Styles.whitespaces.inner / 2,
     paddingBottom: Styles.whitespaces.inner / 2,
   },
-  searchDropDownContainer: {
-    marginHorizontal: Styles.whitespaces.margin + 3,
+
+  horizontalContainer: {
+    ...Styles.containers.horizontal,
+    marginHorizontal: Styles.whitespaces.margin,
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
+  searchBarContainer: {
+    flex: 1,
+    //width: '100%',
+  },
+  searchDropDownContainer: {
+    marginHorizontal: Styles.whitespaces.margin + 5,
+  },
+  iconContainer: {
+    padding: Styles.whitespaces.inner,
+  },
+
+  overlayContainer: {
+    borderRadius: 20,
+    height: Styles.maxHeight / 2,
+    width: Styles.maxWidth + Styles.whitespaces.inner,
+    justifyContent: 'center',
+  },
+  overlayHeader: {
+    fontSize: 16,
+    fontFamily: 'Oxygen-Regular',
+    fontWeight: 'bold',
+    paddingHorizontal: Styles.whitespaces.outer,
+    marginVertical: Styles.whitespaces.inner / 2,
+    textAlign: 'center',
+  },
+  overlayText: {
+    ...Styles.texts.secondary,
+    paddingHorizontal: Styles.whitespaces.outer,
+    textAlign: 'center',
+  },
+  overlayInput: {
+    width: Styles.maxWidth,
+    paddingHorizontal: Styles.whitespaces.outer,
+  },
+  overlayButton: {
+    marginVertical: Styles.whitespaces.inner,
+    width: Styles.maxWidth / 2,
+    alignSelf: 'center',
+  },
+
   lettersContainer: {
     marginRight: Styles.whitespaces.inner / 2,
     width: 25,
-    backgroundColor: 'rgba(' + Styles.hexToRgb(Styles.colors.light) + ',0.75)',
+    backgroundColor:
+      'rgba(' + Utilities.hexToRgb(Styles.colors.light) + ',0.75)',
     borderRadius: 10,
   },
   itemListContainer: {
     paddingHorizontal: Styles.whitespaces.margin,
     paddingVertical: Styles.whitespaces.inner / 2,
+    paddingRight: Styles.whitespaces.margin * 2,
   },
   sectionHeaderContainer: {
     paddingHorizontal: Styles.whitespaces.inner,
