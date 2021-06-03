@@ -10,6 +10,7 @@ Yee is an employee management device that will be useful to the people who have 
 5. Yarn
 6. react-native-picker/picker 1.15.0
 7. React Navigation
+8. Firebase
 
 **IDE**
 1. Jetbrains Webstorm IDE
@@ -55,8 +56,41 @@ Textual Guide: https://reactnative.dev/docs/environment-setup
 8. Under the Project files, expand the project file and `Trial_EMS` folder. Scroll down to `package.json` file and click on it to open. In the editor area, click the green play button at the start of the line: `"android": "react-native run-android",` to run the application on Android Emulator.
 
 ## Revision logs
-April 8 2021:
-Completion of initial UI/UX design.
+**Version 1.0 March 6-16, 2021 **
+* Finalization of project topic.
+* Filled out Sections 1-3 of the SRS document. 
+
+**Version 2.0 March 16-23, 2021**
+* Revision of Sections 1-3 and created Initial UML Diagram, Initial Data Flow Level 0, and Data Dictionary in Appendix A.
+* Filled out Section 4 of SRS document and Group Log.
+
+**Version 3.0 March 23 - April 13, 2021**
+* Worked on revisions, updating the group log, and finalizing the SRS document.
+* Began drafting and creating the initial UI/UX design of the product.
+
+**Version 4.0 April 14 – April 17, 2021**
+* Installed and configured Webstorm (the IDE used), the emulators, and initial dependencies.
+* Revision of Appendix B (Group Log, UI/UX, etc.)
+
+**Version 5.0 April 20 – May 14, 2021**
+* Started on coding main activities of the app, making custom components, tab and stack anavigatos.
+* Programmed the profile screen.
+* Developed and finished LogIn, SignUp, and Welcome Screens as well as HomeScreen.
+
+**May 15 - May 22, 2021**
+* Added more components and global styles.
+* Programmed Employees and HR Stack Navigators and  optimized HomeScreen.
+* Programmed Deaprtments Screens for employees and for HR (editable one).
+* Installed more dependencies.
+
+**May 23 - June 4, 2021**
+* Added Update Department functionality (Editing Members List) for HR's Departments Screen.
+* Programmed Employees Screens for employees (view only) and for HR (editable).
+* Configured and integrated Firebase database and modularized codes.
+* Finished Edit Profile feature for Profile Screens.
+* Programmed Attendance Screen for both employees and HR (same screen for both).
+* Updated SRS documents and made the test documents.
+
 ## Contributors
   John Erwin Bisa - email: john_erwin_bisa@dlsu.edu.ph\
   Joyce Yuenlam Cai - email: joyce_yuenlam_cai@dlsu.edu.ph\
