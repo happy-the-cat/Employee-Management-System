@@ -3,9 +3,12 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 
 import * as Styles from '../Styles';
 
-const IconCard = ({title, onPress, image, containerStyle}) => (
+const IconCard = ({title, onPress, image, containerStyle, disabled}) => (
   <View style={[containerStyle, iconCardStyles.baseContainer]}>
-    <TouchableOpacity onPress={onPress} style={iconCardStyles.buttonContainer}>
+    <TouchableOpacity
+      disabled={disabled}
+      onPress={onPress}
+      style={iconCardStyles.buttonContainer}>
       {image}
       <Text style={iconCardStyles.text}>{title}</Text>
     </TouchableOpacity>

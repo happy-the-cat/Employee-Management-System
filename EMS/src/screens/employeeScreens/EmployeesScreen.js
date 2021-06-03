@@ -11,6 +11,7 @@ import {MemberListItem} from '../../component/DepartmentsLists';
 import {Employees} from '../../../model/employees';
 import * as Styles from '../../Styles';
 import * as Utilities from '../../Utilities';
+import {FocusAwareStatusBar} from '../../component/FocusAwareStatusBar';
 
 const EmployeesScreen = ({navigation}) => {
   /*TODO: retrieve data and IDs from database. This is only a dummy data.*/
@@ -53,7 +54,7 @@ const EmployeesScreen = ({navigation}) => {
 
   return (
     <SafeAreaView style={localStyles.baseContainer}>
-      <StatusBar
+      <FocusAwareStatusBar
         backgroundColor={Styles.colors.light}
         barStyle="dark-content"
       />
