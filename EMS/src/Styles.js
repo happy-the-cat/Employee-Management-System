@@ -54,7 +54,7 @@ const texts = StyleSheet.create({
   },
   secondaryCaps: {
     fontSize: 14,
-    fontFamily: 'Oxygen',
+    fontFamily: 'Oxygen-Regular',
     textTransform: 'uppercase',
   },
   tertiary: {

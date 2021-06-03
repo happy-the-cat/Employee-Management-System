@@ -33,6 +33,7 @@ const ButtonTextOnly = ({
   containerStyle,
   titleStyle,
   textColor,
+  icon,
 }) => (
   <Button
     containerStyle={[containerStyle, textOnlyStyles.button]}
@@ -50,6 +51,7 @@ const ButtonTextOnly = ({
       ],
     ]}
     type="clear"
+    icon={icon}
   />
 );
 
