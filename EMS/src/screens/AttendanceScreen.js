@@ -16,26 +16,6 @@ import * as Utilities from '../Utilities';
 import ClockInImg from '../../assets/images/clock-in.svg';
 import ClockOutImg from '../../assets/images/clock-out.svg';
 
-const SectionedInformation = data => {
-  return (
-    <View style={dividedDataStyles.horizontalContainer}>
-      {data.map((item, index) => {
-        return (
-          <>
-            <View style={Styles.containers.fill}>
-              <Text style={dividedDataStyles.text}>{item.name}</Text>
-              <Text style={dividedDataStyles.subtext}>{item.value}</Text>
-            </View>
-            {index + 1 < data.length ? (
-              <View style={dividedDataStyles.bar} />
-            ) : null}
-          </>
-        );
-      })}
-    </View>
-  );
-};
-
 const MarkedCalendar = ({markedDates, markingType}) => {
   return (
     <Calendar
@@ -71,6 +51,51 @@ const MarkedCalendar = ({markedDates, markingType}) => {
   );
 };
 
+// Get the dates between startDate and stopDate, exclusive.
+const getDatesBetween = (startDate, stopDate) => {
+  const dateArray = [];
+  let currentDate = moment(startDate).add(1, 'days').format('YYYY-MM-DD');
+  while (currentDate < stopDate) {
+    dateArray.push(currentDate);
+    currentDate = moment(currentDate).add(1, 'days').format('YYYY-MM-DD');
+  }
+  return dateArray;
+};
+
+const getMarkedDates = (dates, delimiter, color, textColor) => {
+  const markedDates = {};
+  if (dates) {
+    dates.forEach(dateRange => {
+      const splitDates = dateRange.split(delimiter);
+      if (splitDates.length !== 1) {
+        markedDates[splitDates[0]] = {
+          startingDay: true,
+          color: color,
+          textColor: textColor,
+        };
+        if (!moment(splitDates[1]).subtract(1, 'days').isSame(splitDates[0])) {
+          getDatesBetween(splitDates[0], splitDates[1]).forEach(
+            date => (markedDates[date] = {color: color, textColor: textColor}), //71F5DA
+          );
+        }
+        markedDates[splitDates[1]] = {
+          endingDay: true,
+          color: color,
+          textColor: textColor,
+        };
+      } else {
+        markedDates[splitDates[0]] = {
+          startingDay: true,
+          endingDay: true,
+          color: color,
+          textColor: textColor,
+        };
+      }
+    });
+  }
+  return markedDates;
+};
+
 const AttendanceScreen = ({navigation}) => {
   const imgWidth = (Styles.maxWidth - 30 * 4 - 20) / 2;
   const imgHeight = 70;
@@ -85,54 +110,6 @@ const AttendanceScreen = ({navigation}) => {
   const [hoursWorkedEachDay, setHoursWorkedEachDay] = useState(
     HoursWorkedEachDay,
   );
-
-  // Get the dates between startDate and stopDate, exclusive.
-  const getDatesBetween = (startDate, stopDate) => {
-    const dateArray = [];
-    let currentDate = moment(startDate).add(1, 'days').format('YYYY-MM-DD');
-    while (currentDate < stopDate) {
-      dateArray.push(currentDate);
-      currentDate = moment(currentDate).add(1, 'days').format('YYYY-MM-DD');
-    }
-    return dateArray;
-  };
-
-  const getMarkedDates = (dates, delimiter, color, textColor) => {
-    const markedDates = {};
-    if (dates) {
-      dates.forEach(dateRange => {
-        const splitDates = dateRange.split(delimiter);
-        if (splitDates.length !== 1) {
-          markedDates[splitDates[0]] = {
-            startingDay: true,
-            color: color,
-            textColor: textColor,
-          };
-          if (
-            !moment(splitDates[1]).subtract(1, 'days').isSame(splitDates[0])
-          ) {
-            getDatesBetween(splitDates[0], splitDates[1]).forEach(
-              date =>
-                (markedDates[date] = {color: color, textColor: textColor}), //71F5DA
-            );
-          }
-          markedDates[splitDates[1]] = {
-            endingDay: true,
-            color: color,
-            textColor: textColor,
-          };
-        } else {
-          markedDates[splitDates[0]] = {
-            startingDay: true,
-            endingDay: true,
-            color: color,
-            textColor: textColor,
-          };
-        }
-      });
-    }
-    return markedDates;
-  };
 
   // Calendar markings & marked dates
   const workMarker = {color: 'turquoise', textColor: 'white'};
