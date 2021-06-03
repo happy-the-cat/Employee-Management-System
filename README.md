@@ -8,9 +8,9 @@ Yee is an employee management device that will be useful to the people who have 
 3. React v.17.0.1
 4. React Native cli
 5. Yarn
-6. react-native-picker/picker 1.15.0
 7. React Navigation
 8. Firebase
+9. Otheres (see package.json for full list of react-native dependencies)
 
 **IDE**
 1. Jetbrains Webstorm IDE
