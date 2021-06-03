@@ -56,7 +56,7 @@ Textual Guide: https://reactnative.dev/docs/environment-setup
 8. Under the Project files, expand the project file and `Trial_EMS` folder. Scroll down to `package.json` file and click on it to open. In the editor area, click the green play button at the start of the line: `"android": "react-native run-android",` to run the application on Android Emulator.
 
 ## Revision logs
-**Version 1.0 March 6-16, 2021 **
+**Version 1.0 March 6-16, 2021**
 * Finalization of project topic.
 * Filled out Sections 1-3 of the SRS document. 
 
