@@ -16,6 +16,7 @@ import {ButtonTextOnly} from '../component/Button';
 import * as Styles from '../Styles';
 import * as Utilities from '../Utilities';
 import AttendanceImg from '../../assets/featuresIcons/attendance.svg';
+
 import LeavesImg from '../../assets/featuresIcons/leaves.svg';
 import PayrollImg from '../../assets/featuresIcons/payroll.svg';
 import CaseImg from '../../assets/featuresIcons/case.svg';
