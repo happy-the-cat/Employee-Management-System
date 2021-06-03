@@ -27,6 +27,7 @@ Dependencies Packages:
 - react-native-material-ripple
 - Random Color
 
+
 React Navigation:
 https://reactnavigation.org/docs/getting-started
 	yarn add @react-navigation/native
@@ -92,4 +93,5 @@ https://github.com/davidmerfield/randomColor
 React Native Restart
 https://github.com/avishayil/react-native-restart
 	yarn add react-native-restart
+
 
