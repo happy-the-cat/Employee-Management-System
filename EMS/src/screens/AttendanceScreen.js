@@ -132,8 +132,6 @@ const AttendanceScreen = ({navigation}) => {
   });
 
   const clockIn = () => {
-    /* TODO (for clockout 2) : save time in cache/phone memory (asynchro storage?)
-     * */
     const tempDates = dates;
     const today = moment().format('YYYY-MM-DD');
     if (tempDates) {
@@ -178,7 +176,6 @@ const AttendanceScreen = ({navigation}) => {
   };
 
   const clockOut = () => {
-    // TODO: same todo as clockout
     // Reference: https://stackoverflow.com/a/18624295
     if (timeInOut.isTimeIn && !timeInOut.isTimeOut) {
       const timeOut = moment().format('YYYY-MM-DD HH:mm:ss');
