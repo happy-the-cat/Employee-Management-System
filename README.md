@@ -10,7 +10,6 @@ Yee is an employee management device that will be useful to the people who have 
 5. Yarn
 7. React Navigation
 8. Firebase
-9. Otheres (see package.json for full list of react-native dependencies)
 
 **IDE**
 1. Jetbrains Webstorm IDE
